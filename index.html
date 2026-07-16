@@ -2,24 +2,35 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>汤姆·里德尔的日记 - Tom Riddle's Diary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>汤姆·里德尔的日记</title>
+
+    <!-- SEO & Social Share -->
+    <meta name="description" content="一本能与使用者对话的魔法日记，汤姆·里德尔的魂器。">
+    <meta property="og:title" content="汤姆·里德尔的日记">
+    <meta property="og:description" content="写下你的秘密，日记会回应你……">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>">
+    <meta name="twitter:card" content="summary">
+
+    <!-- Favicon (蛇形图标) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIuWuiOeTnGzCt+mHjOW+t+WwlOeahOaXpeiusCIsCiAgInNob3J0X25hbWUiOiAi5pel6K6w5pysIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZDBhMDciLAogICJpY29ucyI6IFt7CiAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnPjx0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnPvCfkI08L3RleHQ+PC9zdmc+IiwKICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgfV0KfQ==">
+
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Long+Cang&display=swap');
+
         :root {
             --bg: #0d0a07;
-            --cover-dark: #2a1005;
             --cover: #3a1f0d;
-            --cover-light: #4a2810;
             --page: #f0ddb8;
-            --page-dark: #e5cd9a;
-            --page-edge: #d4b87a;
             --ink: #1a1410;
-            --ink-light: #3d3228;
             --green: #2ecc71;
             --green-glow: #5dffa0;
-            --green-dark: #1a7a3a;
-            --gold: #c9a050;
-            --spine: #3a1a08;
+            --midnight-red: #8b0000;
         }
 
         * {
@@ -30,21 +41,24 @@
 
         body {
             background: var(--bg);
-            background-image:
-                radial-gradient(ellipse at center, #1a0f05 0%, #0a0502 70%, #000 100%);
+            background-image: radial-gradient(ellipse at center, #1a0f05 0%, #0a0502 70%, #000 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Georgia', 'Times New Roman', 'Songti SC', 'STSong', serif;
+            font-family: 'MedievalSharp', 'Georgia', serif;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='28'>🖋️</text></svg>") 4 24, auto;
             overflow-x: hidden;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            cursor: default;
+            transition: background 1s;
+            position: relative;
         }
 
-        /* 背景魔法粒子 */
+        /* 午夜模式 */
+        body.midnight {
+            background: #000;
+            background-image: radial-gradient(circle at center, #1a0000 0%, #000 100%);
+        }
+
         .bg-particles {
             position: fixed;
             top: 0;
@@ -54,6 +68,7 @@
             pointer-events: none;
             z-index: 0;
         }
+
         .bg-particle {
             position: absolute;
             border-radius: 50%;
@@ -61,40 +76,14 @@
             animation: floatUp linear infinite;
             opacity: 0;
         }
+
         @keyframes floatUp {
-            0% {
-                transform: translateY(0) translateX(0) scale(1);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            90% {
-                opacity: 0.1;
-            }
-            100% {
-                transform: translateY(-120vh) translateX(40px) scale(0.2);
-                opacity: 0;
-            }
-        }
-        @keyframes floatUpAlt {
-            0% {
-                transform: translateY(0) translateX(0) scale(1);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.05;
-            }
-            100% {
-                transform: translateY(-110vh) translateX(-50px) scale(0.15);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.1; }
+            100% { transform: translateY(-120vh) scale(0.2); opacity: 0; }
         }
 
-        /* 主容器 */
         .main-container {
             position: relative;
             z-index: 1;
@@ -104,91 +93,45 @@
             gap: 20px;
         }
 
-        /* 日记本 */
         .diary-wrapper {
             perspective: 1200px;
-            position: relative;
         }
+
         .diary {
             display: flex;
-            position: relative;
             border-radius: 8px;
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.7),
-                0 5px 20px rgba(0, 0, 0, 0.5),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
             transform: rotateX(3deg);
-            transition: transform 0.6s ease;
-        }
-        .diary:hover {
-            transform: rotateX(1deg);
+            transition: transform 0.6s;
         }
 
-        /* 左页封面边缘 */
-        .page-outer-left {
+        .page-outer-left, .page-outer-right {
             background: var(--cover);
-            background-image: linear-gradient(135deg, #3d1f0d 0%, #2a1005 40%, #3a1a08 100%);
-            border-radius: 8px 2px 2px 8px;
-            padding: 6px 4px 6px 8px;
-            position: relative;
-            box-shadow: -3px 2px 8px rgba(0, 0, 0, 0.5);
-        }
-        .page-outer-left::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: inherit;
-            background: repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 3px,
-                    rgba(0, 0, 0, 0.03) 3px,
-                    rgba(0, 0, 0, 0.03) 4px);
-            pointer-events: none;
+            background-image: linear-gradient(135deg, #3d1f0d 0%, #2a1005 100%);
+            padding: 6px 4px;
+            box-shadow: -3px 2px 8px rgba(0,0,0,0.5);
         }
 
-        /* 右页封面边缘 */
-        .page-outer-right {
-            background: var(--cover);
-            background-image: linear-gradient(315deg, #3d1f0d 0%, #2a1005 40%, #3a1a08 100%);
-            border-radius: 2px 8px 8px 2px;
-            padding: 6px 8px 6px 4px;
-            position: relative;
-            box-shadow: 3px 2px 8px rgba(0, 0, 0, 0.5);
-        }
-        .page-outer-right::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: inherit;
-            background: repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 3px,
-                    rgba(0, 0, 0, 0.03) 3px,
-                    rgba(0, 0, 0, 0.03) 4px);
-            pointer-events: none;
-        }
+        .page-outer-left { border-radius: 8px 2px 2px 8px; padding-left: 8px; }
+        .page-outer-right { border-radius: 2px 8px 8px 2px; padding-right: 8px; }
 
-        /* 书页 */
         .page {
             background: var(--page);
             background-image:
-                linear-gradient(to bottom,
-                    #f5e6c8 0%, #f0ddb8 15%, #ecd4a5 30%, #f0ddb8 50%, #e8cd98 70%, #f2dfbc 100%),
-                radial-gradient(ellipse at 30% 20%, rgba(210, 180, 120, 0.35) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 75%, rgba(200, 160, 100, 0.3) 0%, transparent 55%);
+                linear-gradient(to bottom, #f5e6c8 0%, #f0ddb8 15%, #ecd4a5 30%, #f0ddb8 50%, #e8cd98 70%, #f2dfbc 100%),
+                radial-gradient(ellipse at 30% 20%, rgba(210,180,120,0.35) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 75%, rgba(200,160,100,0.3) 0%, transparent 55%),
+                /* 咖啡渍斑点 */
+                radial-gradient(circle at 15% 85%, rgba(120, 70, 30, 0.25) 0%, rgba(120,70,30,0.1) 15%, transparent 30%),
+                radial-gradient(circle at 85% 10%, rgba(100, 60, 20, 0.2) 0%, rgba(100,60,20,0.08) 20%, transparent 40%),
+                radial-gradient(circle at 40% 90%, rgba(130, 80, 40, 0.3) 0%, rgba(130,80,40,0.1) 25%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(90, 50, 20, 0.15) 0%, transparent 35%);
             border-radius: 2px;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(139, 90, 40, 0.25);
-            transition: all 0.3s ease;
+            box-shadow: inset 0 0 30px rgba(139,90,40,0.25);
         }
-        /* 纸页纹理 */
+
         .page::before {
             content: '';
             position: absolute;
@@ -197,154 +140,92 @@
             right: 0;
             bottom: 0;
             background:
-                repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(180, 140, 90, 0.06) 2px,
-                    rgba(180, 140, 90, 0.06) 3px),
-                repeating-linear-gradient(90deg,
-                    transparent,
-                    transparent 40px,
-                    rgba(160, 120, 70, 0.04) 40px,
-                    rgba(160, 120, 70, 0.04) 41px);
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(180,140,90,0.06) 2px, rgba(180,140,90,0.06) 3px),
+                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(160,120,70,0.04) 40px, rgba(160,120,70,0.04) 41px);
             pointer-events: none;
             z-index: 2;
-            border-radius: inherit;
-        }
-        /* 做旧斑点 */
-        .page::after {
-            content: '';
-            position: absolute;
-            top: 5%;
-            left: 10%;
-            width: 60%;
-            height: 30%;
-            background: radial-gradient(ellipse, rgba(160, 120, 70, 0.2) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-            border-radius: 50%;
         }
 
-        /* 左页 */
         .page-left {
             width: 340px;
             min-height: 480px;
-            border-radius: 2px 0 0 2px;
             padding: 25px 20px 25px 30px;
             display: flex;
             flex-direction: column;
             z-index: 3;
-            position: relative;
         }
-        /* 右页 */
+
         .page-right {
             width: 340px;
             min-height: 480px;
-            border-radius: 0 2px 2px 0;
             padding: 25px 30px 25px 20px;
             display: flex;
             flex-direction: column;
             z-index: 3;
-            position: relative;
         }
 
-        /* 书脊阴影线 */
         .spine-line {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 3px;
-            background: linear-gradient(to right,
-                    rgba(0, 0, 0, 0.25),
-                    rgba(0, 0, 0, 0.08),
-                    rgba(0, 0, 0, 0.2));
+            background: linear-gradient(to right, rgba(0,0,0,0.25), rgba(0,0,0,0.08), rgba(0,0,0,0.2));
             z-index: 10;
             pointer-events: none;
         }
-        .page-left .spine-line {
-            right: 0;
-        }
-        .page-right .spine-line {
-            left: 0;
-        }
+        .page-left .spine-line { right: 0; }
+        .page-right .spine-line { left: 0; }
 
-        /* 左页标题 */
-        .page-left .diary-label {
+        .diary-label, .writing-label {
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             color: #6b5040;
             letter-spacing: 2px;
-            margin-bottom: 8px;
             font-style: italic;
-            opacity: 0.7;
+            opacity: 0.8;
+            margin-bottom: 6px;
         }
-        .page-left .diary-owner {
+
+        .diary-owner {
             text-align: center;
-            font-size: 15px;
+            font-size: 16px;
             color: #4a3028;
             letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: bold;
-            border-bottom: 1px solid rgba(100, 70, 40, 0.3);
-            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(100,70,40,0.3);
+            padding-bottom: 10px;
         }
-        .page-left .response-area {
+
+        .response-area {
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 10px;
-            position: relative;
+            overflow-y: auto;
+            max-height: 250px;
+            margin-bottom: 10px;
             z-index: 5;
         }
-        .response-text {
-            font-size: 16px;
+
+        .response-entry {
+            font-size: 15px;
             color: var(--green);
-            text-shadow: 0 0 15px var(--green-glow), 0 0 30px var(--green), 0 0 50px var(--green-dark);
+            text-shadow: 0 0 10px var(--green-glow);
             text-align: center;
             letter-spacing: 1px;
             line-height: 1.8;
-            opacity: 0;
-            transition: opacity 0.8s ease;
             font-style: italic;
-            word-break: break-word;
-            padding: 10px;
-        }
-        .response-text.visible {
-            opacity: 1;
-            animation: glowPulse 2s ease-in-out infinite;
-        }
-        @keyframes glowPulse {
-            0%,
-            100% {
-                text-shadow: 0 0 15px var(--green-glow), 0 0 30px var(--green), 0 0 50px var(--green-dark);
-            }
-            50% {
-                text-shadow: 0 0 25px var(--green-glow), 0 0 45px #7fffbb, 0 0 70px var(--green), 0 0 90px var(--green-dark);
-            }
-        }
-        .response-text.easter-egg {
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            animation: easterEggGlow 1.5s ease-in-out infinite;
-            color: #ff4444;
-            text-shadow: 0 0 20px #ff4444, 0 0 40px #ff0000, 0 0 60px #aa0000, 0 0 80px #660000;
-        }
-        @keyframes easterEggGlow {
-            0%,
-            100% {
-                text-shadow: 0 0 20px #ff4444, 0 0 40px #ff0000, 0 0 60px #aa0000;
-                transform: scale(1);
-            }
-            50% {
-                text-shadow: 0 0 35px #ff6666, 0 0 60px #ff2222, 0 0 90px #cc0000, 0 0 120px #880000;
-                transform: scale(1.03);
-            }
+            padding: 8px;
+            margin: 4px 0;
+            animation: fadeIn 0.6s ease;
+            border-bottom: 1px dashed rgba(100,70,40,0.2);
         }
 
-        /* 装饰蛇纹 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .snake-decoration {
             position: absolute;
             opacity: 0.06;
@@ -353,112 +234,64 @@
             font-size: 120px;
             color: #3a6b3a;
         }
-        .page-left .snake-decoration {
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) rotate(-15deg);
-        }
-        .page-right .snake-decoration {
-            bottom: 30px;
-            right: 40px;
-            transform: rotate(10deg);
-            font-size: 90px;
-        }
+        .page-left .snake-decoration { bottom: 30px; left: 50%; transform: translateX(-50%) rotate(-15deg); }
+        .page-right .snake-decoration { bottom: 30px; right: 40px; transform: rotate(10deg); font-size: 90px; }
 
-        /* 右页书写区 */
-        .page-right .writing-label {
-            text-align: center;
-            font-size: 13px;
-            color: #6b5040;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
-            font-style: italic;
-            opacity: 0.7;
-        }
         .canvas-container {
             position: relative;
             flex: 1;
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z' fill='%231a1410' opacity='0.7'/></svg>") 2 20,
-            crosshair;
-            border-radius: 4px;
-            position: relative;
-            z-index: 5;
-            min-height: 250px;
-            background: transparent;
-            border: 1px dashed rgba(139, 100, 60, 0.25);
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='28'>🖋️</text></svg>") 4 24, auto;
+            border: 1px dashed rgba(139,100,60,0.25);
             border-radius: 6px;
-            transition: border-color 0.4s ease;
+            min-height: 250px;
+            z-index: 5;
+            background: transparent;
         }
-        .canvas-container:hover {
-            border-color: rgba(139, 100, 60, 0.5);
-        }
-        .canvas-container.writing {
-            border-color: rgba(60, 40, 20, 0.6);
-            border-style: solid;
-        }
+
         canvas#writingCanvas {
             width: 100%;
             height: 100%;
             border-radius: 6px;
             touch-action: none;
-            position: relative;
-            z-index: 6;
         }
+
         .canvas-hint {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
-            z-index: 4;
             color: #b8a080;
             font-size: 15px;
             letter-spacing: 1px;
-            font-style: italic;
             text-align: center;
-            transition: opacity 0.5s ease;
             opacity: 0.7;
         }
-        .canvas-container.writing .canvas-hint {
-            opacity: 0.2;
-        }
 
-        /* 打字输入区 */
         .text-input-area {
             display: none;
             flex: 1;
-            z-index: 5;
-            position: relative;
+            flex-direction: column;
             min-height: 250px;
         }
-        .text-input-area.active {
-            display: flex;
-            flex-direction: column;
-        }
+
+        .text-input-area.active { display: flex; }
+
         .text-input-area textarea {
             flex: 1;
             background: transparent;
-            border: 1px dashed rgba(139, 100, 60, 0.3);
+            border: 1px dashed rgba(139,100,60,0.3);
             border-radius: 6px;
             padding: 15px;
-            font-family: 'Georgia', 'Times New Roman', 'Songti SC', serif;
-            font-size: 16px;
+            font-family: 'Long Cang', 'MedievalSharp', serif;
+            font-size: 18px;
             color: var(--ink);
             resize: none;
             outline: none;
             letter-spacing: 0.5px;
             line-height: 1.8;
-            transition: border-color 0.4s ease;
-            z-index: 6;
         }
-        .text-input-area textarea:focus {
-            border-color: rgba(100, 60, 30, 0.6);
-            border-style: solid;
-        }
-        .text-input-area textarea::placeholder {
-            color: #c5b090;
-            font-style: italic;
-        }
+
         .submit-btn {
             margin-top: 8px;
             padding: 8px 20px;
@@ -467,251 +300,95 @@
             border: none;
             border-radius: 20px;
             cursor: pointer;
-            font-family: 'Georgia', serif;
+            font-family: inherit;
             letter-spacing: 2px;
             font-size: 13px;
-            transition: all 0.3s ease;
             align-self: center;
-            z-index: 6;
-        }
-        .submit-btn:hover {
-            background: #2a1a10;
-            color: #f0e0c0;
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
         }
 
-        /* 粒子Canvas覆盖层 */
-        .particle-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 15;
-            border-radius: 6px;
-        }
-        canvas#particleCanvas {
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            border-radius: 6px;
-        }
-
-        /* 工具栏 */
         .toolbar {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
-            z-index: 20;
         }
+
         .tool-btn {
             padding: 10px 18px;
-            background: rgba(30, 15, 5, 0.8);
+            background: rgba(30,15,5,0.8);
             color: #c9a050;
-            border: 1px solid rgba(201, 160, 80, 0.4);
+            border: 1px solid rgba(201,160,80,0.4);
             border-radius: 25px;
             cursor: pointer;
-            font-family: 'Georgia', serif;
+            font-family: inherit;
             letter-spacing: 1px;
             font-size: 13px;
-            transition: all 0.35s ease;
+            transition: all 0.35s;
             backdrop-filter: blur(4px);
-            position: relative;
-            overflow: hidden;
         }
-        .tool-btn:hover {
-            background: rgba(50, 25, 8, 0.9);
-            border-color: rgba(201, 160, 80, 0.8);
-            color: #e0c070;
-            box-shadow: 0 0 20px rgba(201, 160, 80, 0.25);
-            transform: translateY(-2px);
-        }
-        .tool-btn:active {
-            transform: scale(0.95);
-            transition: transform 0.1s ease;
-        }
+
         .tool-btn.active-mode {
-            background: rgba(46, 150, 80, 0.3);
+            background: rgba(46,150,80,0.3);
             border-color: var(--green);
             color: var(--green-glow);
-            box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
-        }
-        .tool-btn .btn-icon {
-            display: inline-block;
-            margin-right: 6px;
-            font-size: 15px;
         }
 
-        /* 墨水瓶装饰 */
-        .inkwell {
+        .audio-toggle {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 40px;
-            height: 50px;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.3;
-        }
-        .inkwell::before {
-            content: '🖋️';
-            font-size: 40px;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            filter: grayscale(0.8) brightness(0.5);
-            animation: inkwellFloat 6s ease-in-out infinite;
-        }
-        @keyframes inkwellFloat {
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            25% {
-                transform: translateY(-8px) rotate(2deg);
-            }
-            75% {
-                transform: translateY(-4px) rotate(-2deg);
-            }
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
         }
 
-        /* 响应式 */
+        /* 移动端适配 */
         @media (max-width: 768px) {
-            .diary {
-                flex-direction: column;
-                transform: none;
-                border-radius: 6px;
-            }
-            .diary:hover {
-                transform: none;
-            }
-            .page-outer-left {
-                border-radius: 6px 6px 0 0;
-                padding: 4px 6px 2px 6px;
-            }
-            .page-outer-right {
-                border-radius: 0 0 6px 6px;
-                padding: 2px 6px 4px 6px;
-            }
-            .page-left {
-                width: 100%;
-                min-height: 180px;
-                border-radius: 2px 2px 0 0;
-                padding: 18px 15px 12px 15px;
-            }
-            .page-right {
-                width: 100%;
-                min-height: 300px;
-                border-radius: 0 0 2px 2px;
-                padding: 12px 15px 18px 15px;
-            }
-            .canvas-container {
-                min-height: 200px;
-            }
-            .text-input-area {
-                min-height: 200px;
-            }
-            .page-left .diary-owner {
-                margin-bottom: 10px;
-                font-size: 13px;
-            }
-            .page-left .diary-label {
-                font-size: 11px;
-                margin-bottom: 4px;
-            }
-            .response-text {
-                font-size: 14px;
-                padding: 5px;
-            }
-            .snake-decoration {
-                font-size: 60px !important;
-            }
-            .page-left .snake-decoration {
-                bottom: 15px;
-                font-size: 50px !important;
-            }
-            .page-right .snake-decoration {
-                bottom: 10px;
-                right: 15px;
-                font-size: 45px !important;
-            }
-            .toolbar {
-                gap: 8px;
-            }
-            .tool-btn {
-                padding: 8px 12px;
-                font-size: 11px;
-                letter-spacing: 0.5px;
-            }
-            .spine-line {
-                display: none;
-            }
-        }
-        @media (max-width: 400px) {
-            .page-left {
-                min-height: 140px;
-                padding: 12px 10px 8px 10px;
-            }
-            .page-right {
-                min-height: 240px;
-                padding: 8px 10px 12px 10px;
-            }
-            .canvas-container {
-                min-height: 160px;
-            }
-            .text-input-area {
-                min-height: 160px;
-            }
-            .response-text {
-                font-size: 12px;
-            }
-            .page-left .diary-owner {
-                font-size: 11px;
-            }
-            .tool-btn {
-                padding: 6px 10px;
-                font-size: 10px;
-            }
+            .diary { flex-direction: column; transform: none; }
+            .page-left, .page-right { width: 100%; min-height: auto; padding: 15px; }
+            .page-left { min-height: 200px; }
+            .page-right { min-height: 320px; }
+            .snake-decoration { font-size: 50px !important; }
+            .toolbar { gap: 8px; }
+            .tool-btn { padding: 8px 12px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
-
-    <!-- 背景粒子容器 -->
     <div class="bg-particles" id="bgParticles"></div>
 
-    <!-- 主容器 -->
+    <!-- 背景音频（可选） -->
+    <audio id="bgAudio" loop preload="none" src="" volume="0.3"></audio>
+    <button class="audio-toggle" id="audioToggle">🔇 开启氛围音</button>
+
     <div class="main-container">
-        <!-- 日记本 -->
         <div class="diary-wrapper">
             <div class="diary" id="diaryBook">
-                <!-- 左页 -->
                 <div class="page-outer-left">
                     <div class="page page-left" id="pageLeft">
                         <div class="spine-line"></div>
                         <div class="diary-label">▸ 汤姆·里德尔的日记 ◂</div>
                         <div class="diary-owner">T. M. Riddle</div>
-                        <div class="response-area" id="responseArea">
-                            <div class="response-text" id="responseText"></div>
-                        </div>
+                        <div class="response-area" id="responseArea"></div>
                         <div class="snake-decoration">🐍</div>
                     </div>
                 </div>
-
-                <!-- 右页 -->
                 <div class="page-outer-right">
                     <div class="page page-right" id="pageRight">
                         <div class="spine-line"></div>
                         <div class="writing-label">✍ 在此书写你的秘密...</div>
                         <div class="canvas-container" id="canvasContainer">
                             <canvas id="writingCanvas"></canvas>
-                            <canvas id="particleCanvas" class="particle-overlay"></canvas>
-                            <div class="canvas-hint" id="canvasHint">用羽毛笔在此书写<br>或切换至打字模式</div>
+                            <canvas id="particleCanvas" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+                            <div class="canvas-hint">用羽毛笔在此书写<br>或切换至打字模式</div>
                         </div>
                         <div class="text-input-area" id="textInputArea">
-                            <textarea id="textInput" placeholder="写下你想说的话...&#10;日记会回应你..." rows="5"></textarea>
+                            <textarea id="textInput" placeholder="写下你想说的话..." rows="5"></textarea>
                             <button class="submit-btn" id="submitBtn">✦ 交给日记 ✦</button>
                         </div>
                         <div class="snake-decoration">🐍</div>
@@ -719,35 +396,20 @@
                 </div>
             </div>
         </div>
-
-        <!-- 工具栏 -->
         <div class="toolbar">
-            <button class="tool-btn active-mode" id="btnWrite" title="手写模式">
-                <span class="btn-icon">🖊️</span>手写模式
-            </button>
-            <button class="tool-btn" id="btnType" title="打字模式">
-                <span class="btn-icon">⌨️</span>打字模式
-            </button>
-            <button class="tool-btn" id="btnClear" title="清除书写内容">
-                <span class="btn-icon">🧹</span>清除
-            </button>
-            <button class="tool-btn" id="btnReset" title="重置日记">
-                <span class="btn-icon">🔄</span>重置日记
-            </button>
+            <button class="tool-btn active-mode" id="btnWrite">🖊️ 手写</button>
+            <button class="tool-btn" id="btnType">⌨️ 打字</button>
+            <button class="tool-btn" id="btnClear">🧹 清除</button>
+            <button class="tool-btn" id="btnReset">🔄 重置</button>
         </div>
     </div>
 
-    <!-- 墨水瓶装饰 -->
-    <div class="inkwell"></div>
-
     <script>
-        (function() {
-            // ==================== DOM元素 ====================
+        (() => {
             const canvasContainer = document.getElementById('canvasContainer');
             const writingCanvas = document.getElementById('writingCanvas');
             const particleCanvas = document.getElementById('particleCanvas');
-            const canvasHint = document.getElementById('canvasHint');
-            const responseText = document.getElementById('responseText');
+            const canvasHint = document.querySelector('.canvas-hint');
             const responseArea = document.getElementById('responseArea');
             const textInputArea = document.getElementById('textInputArea');
             const textInput = document.getElementById('textInput');
@@ -756,59 +418,69 @@
             const btnType = document.getElementById('btnType');
             const btnClear = document.getElementById('btnClear');
             const btnReset = document.getElementById('btnReset');
-            const bgParticlesContainer = document.getElementById('bgParticles');
+            const audioToggle = document.getElementById('audioToggle');
+            const bgAudio = document.getElementById('bgAudio');
             const pageLeft = document.getElementById('pageLeft');
 
             const ctx = writingCanvas.getContext('2d');
             const pctx = particleCanvas.getContext('2d');
 
-            // ==================== 状态管理 ====================
-            let currentMode = 'write'; // 'write' | 'type'
+            let currentMode = 'write';
             let isDrawing = false;
-            let lastX = 0;
-            let lastY = 0;
-            let lastTime = 0;
+            let lastX = 0, lastY = 0, lastTime = 0;
             let inactivityTimer = null;
-            let disappearTimeout = null;
-            const INACTIVITY_DELAY = 3500; // 停止书写后3.5秒文字消失
-            const RESPONSE_DELAY = 1500; // 文字消失后1.5秒回复
-            let interactionCount = 0; // 交互计数（用于彩蛋）
-            let isDisappearing = false;
+            const INACTIVITY_DELAY = 3500;
+            const RESPONSE_DELAY = 1500;
+            let interactionCount = parseInt(localStorage.getItem('diaryInteractionCount') || '0');
             let particles = [];
             let animationId = null;
-            let responseVisible = false;
+            let strokeCount = 0; // 本次书写笔画数
+            let totalDistance = 0;
+            let speedSamples = [];
 
-            // ==================== Canvas初始化 ====================
+            // 对话历史保存
+            let conversationHistory = JSON.parse(localStorage.getItem('diaryConversation') || '[]');
+            renderHistory();
+
+            // 音频控制
+            let audioEnabled = false;
+            audioToggle.addEventListener('click', () => {
+                if (!audioEnabled) {
+                    bgAudio.play().catch(() => {});
+                    audioEnabled = true;
+                    audioToggle.textContent = '🔊 关闭氛围音';
+                } else {
+                    bgAudio.pause();
+                    audioEnabled = false;
+                    audioToggle.textContent = '🔇 开启氛围音';
+                }
+            });
+
+            // 午夜血字检测
+            function checkMidnight() {
+                const hour = new Date().getHours();
+                document.body.classList.toggle('midnight', hour >= 0 && hour < 4);
+            }
+            checkMidnight();
+            setInterval(checkMidnight, 60000);
+
             function resizeCanvases() {
                 const rect = canvasContainer.getBoundingClientRect();
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                const width = rect.width;
-                const height = rect.height;
-
-                // 调整书写Canvas
+                const width = rect.width, height = rect.height;
                 if (writingCanvas.width !== width * dpr || writingCanvas.height !== height * dpr) {
-                    // 保存当前图像
                     const tempCanvas = document.createElement('canvas');
                     tempCanvas.width = writingCanvas.width;
                     tempCanvas.height = writingCanvas.height;
                     const tempCtx = tempCanvas.getContext('2d');
                     tempCtx.drawImage(writingCanvas, 0, 0);
-
                     writingCanvas.width = width * dpr;
                     writingCanvas.height = height * dpr;
                     writingCanvas.style.width = width + 'px';
                     writingCanvas.style.height = height + 'px';
                     ctx.scale(dpr, dpr);
-                    ctx.lineCap = 'round';
-                    ctx.lineJoin = 'round';
-                    ctx.strokeStyle = '#1a1410';
-                    ctx.lineWidth = 2.2;
-
-                    // 恢复图像
                     ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, width, height);
                 }
-
-                // 调整粒子Canvas
                 if (particleCanvas.width !== width * dpr || particleCanvas.height !== height * dpr) {
                     particleCanvas.width = width * dpr;
                     particleCanvas.height = height * dpr;
@@ -817,157 +489,100 @@
                 }
             }
 
-            function getCanvasPos(e) {
-                const rect = writingCanvas.getBoundingClientRect();
-                return {
-                    x: (e.clientX - rect.left),
-                    y: (e.clientY - rect.top)
-                };
-            }
+            function getCanvasPos(e) { const r = writingCanvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+            function getTouchPos(e) { const t = e.touches[0]; const r = writingCanvas.getBoundingClientRect(); return { x: t.clientX - r.left, y: t.clientY - r.top }; }
 
-            function getTouchPos(e) {
-                const rect = writingCanvas.getBoundingClientRect();
-                const touch = e.touches[0];
-                return {
-                    x: (touch.clientX - rect.left),
-                    y: (touch.clientY - rect.top)
-                };
-            }
-
-            // ==================== 笔触速度感应 ====================
-            function getAdjustedLineWidth(currentX, currentY, prevX, prevY, prevTime) {
-                const now = Date.now();
-                const dt = now - prevTime;
-                if (dt === 0 || prevTime === 0) return 2.4;
-                const dist = Math.sqrt((currentX - prevX) ** 2 + (currentY - prevY) ** 2);
-                const speed = dist / dt; // px/ms
-                // 速度快线条细，速度慢线条粗
-                const baseWidth = 2.6;
-                const minWidth = 1.4;
-                const maxWidth = 3.8;
-                const adjusted = baseWidth - speed * 1.5;
-                return Math.max(minWidth, Math.min(maxWidth, adjusted));
-            }
-
-            // ==================== 手写功能 ====================
             function startDrawing(e) {
                 if (currentMode !== 'write') return;
-                if (isDisappearing) return;
+                // 防误触：只允许单指
+                if (e.type === 'touchstart' && e.touches.length !== 1) return;
                 e.preventDefault();
-                const pos = (e.type === 'touchstart') ? getTouchPos(e) : getCanvasPos(e);
+                const pos = e.type === 'touchstart' ? getTouchPos(e) : getCanvasPos(e);
                 isDrawing = true;
-                lastX = pos.x;
-                lastY = pos.y;
-                lastTime = Date.now();
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-                // 起始点画一个小圆点
+                lastX = pos.x; lastY = pos.y; lastTime = Date.now();
+                strokeCount = 0;
+                totalDistance = 0;
+                speedSamples = [];
                 ctx.fillStyle = '#1a1410';
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 1.1, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
+                ctx.beginPath(); ctx.arc(pos.x, pos.y, 1.1, 0, 2 * Math.PI); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
                 canvasContainer.classList.add('writing');
                 canvasHint.style.opacity = '0.15';
-                clearTimeout(disappearTimeout);
                 clearTimeout(inactivityTimer);
-                if (responseVisible) {
-                    hideResponse();
-                }
             }
 
             function draw(e) {
                 if (!isDrawing || currentMode !== 'write') return;
-                if (isDisappearing) return;
+                if (e.type === 'touchmove' && e.touches.length !== 1) return;
                 e.preventDefault();
-                const pos = (e.type === 'touchmove') ? getTouchPos(e) : getCanvasPos(e);
-                const adjustedWidth = getAdjustedLineWidth(pos.x, pos.y, lastX, lastY, lastTime);
-                ctx.lineWidth = adjustedWidth;
+                const pos = e.type === 'touchmove' ? getTouchPos(e) : getCanvasPos(e);
+                const dt = Date.now() - lastTime;
+                const dist = Math.sqrt((pos.x - lastX) ** 2 + (pos.y - lastY) ** 2);
+                totalDistance += dist;
+                strokeCount++;
+                const speed = dt > 0 ? dist / dt : 0;
+                speedSamples.push(speed);
+                const lineWidth = Math.max(1.4, Math.min(3.8, 2.6 - speed * 1.5));
+                ctx.lineWidth = lineWidth;
                 ctx.strokeStyle = '#1a1410';
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                // 添加微弱的阴影模拟墨水渗透
-                ctx.shadowColor = 'rgba(20, 10, 5, 0.3)';
-                ctx.shadowBlur = adjustedWidth * 0.7;
-                ctx.beginPath();
-                ctx.moveTo(lastX, lastY);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
+                ctx.shadowColor = 'rgba(20,10,5,0.3)';
+                ctx.shadowBlur = lineWidth * 0.7;
+                ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(pos.x, pos.y); ctx.stroke();
                 ctx.shadowColor = 'transparent';
-                ctx.shadowBlur = 0;
-                lastX = pos.x;
-                lastY = pos.y;
-                lastTime = Date.now();
+                lastX = pos.x; lastY = pos.y; lastTime = Date.now();
             }
 
-            function stopDrawing(e) {
+            function stopDrawing() {
                 if (!isDrawing) return;
                 isDrawing = false;
-                ctx.shadowColor = 'transparent';
-                ctx.shadowBlur = 0;
                 canvasContainer.classList.remove('writing');
                 canvasHint.style.opacity = '0.4';
                 lastTime = 0;
-                // 检查canvas是否有内容
-                if (hasCanvasContent()) {
-                    startInactivityTimer();
-                }
+                if (hasCanvasContent()) startInactivityTimer();
             }
 
             function hasCanvasContent() {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const imageData = ctx.getImageData(0, 0, writingCanvas.width, writingCanvas.height);
-                const pixels = imageData.data;
-                // 检查是否有非透明像素（alpha > 10）
-                for (let i = 3; i < pixels.length; i += 4) {
-                    if (pixels[i] > 10) return true;
-                }
+                for (let i = 3; i < imageData.data.length; i += 4) if (imageData.data[i] > 10) return true;
                 return false;
             }
 
             function startInactivityTimer() {
                 clearTimeout(inactivityTimer);
-                clearTimeout(disappearTimeout);
                 inactivityTimer = setTimeout(() => {
-                    if (!isDrawing && hasCanvasContent() && !isDisappearing) {
-                        triggerDisappear();
-                    }
+                    if (!isDrawing && hasCanvasContent()) triggerDisappear();
                 }, INACTIVITY_DELAY);
             }
 
-            // ==================== 文字消失动画 ====================
             function triggerDisappear() {
-                if (isDisappearing) return;
                 if (!hasCanvasContent() && currentMode === 'write') return;
-                isDisappearing = true;
-                clearTimeout(disappearTimeout);
+                const avgSpeed = speedSamples.length ? speedSamples.reduce((a, b) => a + b, 0) / speedSamples.length : 0;
                 clearTimeout(inactivityTimer);
 
                 if (currentMode === 'write') {
-                    // 获取canvas图像用于粒子
-                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
                     const imageData = ctx.getImageData(0, 0, writingCanvas.width, writingCanvas.height);
                     spawnInkParticles(imageData);
-                    // 淡出canvas
                     animateCanvasFadeOut(() => {
                         clearCanvas();
-                        isDisappearing = false;
                         canvasHint.style.opacity = '0.7';
                         interactionCount++;
-                        checkEasterEgg();
-                        scheduleResponse();
+                        localStorage.setItem('diaryInteractionCount', interactionCount);
+                        processSubmission(null, avgSpeed);
                     });
-                } else if (currentMode === 'type') {
-                    // 打字模式的文字消失（从textarea提交的文字）
-                    spawnTextParticles();
-                    setTimeout(() => {
-                        isDisappearing = false;
-                        interactionCount++;
-                        checkEasterEgg();
-                        scheduleResponse();
-                    }, 800);
                 }
+            }
+
+            function processSubmission(userText, avgSpeed = 0) {
+                // 写太多打断检测
+                if (strokeCount > 200 && currentMode === 'write') {
+                    addResponse("太多了……我无法一次吸收这么多。", true);
+                    strokeCount = 0;
+                    return;
+                }
+                const reply = getReply(userText || '', avgSpeed);
+                addResponse(reply, false);
+                checkEasterEgg();
             }
 
             function animateCanvasFadeOut(callback) {
@@ -975,463 +590,212 @@
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = writingCanvas.width;
                 tempCanvas.height = writingCanvas.height;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(writingCanvas, 0, 0);
+                tempCanvas.getContext('2d').drawImage(writingCanvas, 0, 0);
                 clearCanvas();
-
                 let opacity = 1;
-                const fadeStep = () => {
+                const fade = () => {
                     opacity -= 0.06;
-                    if (opacity <= 0) {
-                        ctx.clearRect(0, 0, writingCanvas.width / dpr, writingCanvas.height / dpr);
-                        if (callback) callback();
-                        return;
-                    }
+                    if (opacity <= 0) { callback(); return; }
                     ctx.clearRect(0, 0, writingCanvas.width / dpr, writingCanvas.height / dpr);
                     ctx.globalAlpha = opacity;
-                    ctx.drawImage(tempCanvas, 0, 0, writingCanvas.width, writingCanvas.height, 0, 0, writingCanvas
-                        .width / dpr, writingCanvas.height / dpr);
+                    ctx.drawImage(tempCanvas, 0, 0, writingCanvas.width, writingCanvas.height, 0, 0, writingCanvas.width / dpr, writingCanvas.height / dpr);
                     ctx.globalAlpha = 1;
-                    requestAnimationFrame(fadeStep);
+                    requestAnimationFrame(fade);
                 };
-                requestAnimationFrame(fadeStep);
+                requestAnimationFrame(fade);
             }
 
             function clearCanvas() {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 ctx.clearRect(0, 0, writingCanvas.width / dpr, writingCanvas.height / dpr);
-                ctx.globalAlpha = 1;
             }
 
-            function spawnInkParticles(imageData) {
+            function spawnInkParticles(imageData) { /* 省略粒子代码，保持与之前版本相同 */
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                const width = writingCanvas.width / dpr;
-                const height = writingCanvas.height / dpr;
-                const pixels = imageData.data;
-                const sampledParticles = [];
-                // 采样暗色像素
-                const step = 6;
-                for (let y = 0; y < writingCanvas.height; y += step) {
-                    for (let x = 0; x < writingCanvas.width; x += step) {
+                const w = writingCanvas.width / dpr, h = writingCanvas.height / dpr;
+                const sampled = [];
+                for (let y = 0; y < writingCanvas.height; y += 6) {
+                    for (let x = 0; x < writingCanvas.width; x += 6) {
                         const idx = (y * writingCanvas.width + x) * 4;
-                        const alpha = pixels[idx + 3];
-                        const brightness = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
-                        if (alpha > 30 && brightness < 180) {
-                            sampledParticles.push({
-                                x: x / dpr,
-                                y: y / dpr,
-                                alpha: alpha / 255,
-                                brightness: brightness,
-                            });
-                        }
+                        if (imageData.data[idx + 3] > 30) sampled.push({ x: x / dpr, y: y / dpr });
                     }
                 }
-                // 限制粒子数量
-                const maxParticles = 300;
-                const selectedParticles = sampledParticles
-                    .sort(() => Math.random() - 0.5)
-                    .slice(0, maxParticles);
-
-                // 计算中心点
-                const cx = width / 2;
-                const cy = height / 2;
-
-                selectedParticles.forEach(p => {
-                    const angle = Math.atan2(p.y - cy, p.x - cx);
-                    const dist = Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2);
+                sampled.sort(() => Math.random() - 0.5).slice(0, 300).forEach(p => {
+                    const a = Math.atan2(p.y - h / 2, p.x - w / 2);
                     particles.push({
-                        x: p.x,
-                        y: p.y,
-                        vx: -Math.cos(angle) * (0.5 + Math.random() * 1.8),
-                        vy: -Math.sin(angle) * (0.5 + Math.random() * 1.8),
-                        life: 1,
-                        decay: 0.012 + Math.random() * 0.03,
-                        size: 1 + Math.random() * 3.5,
-                        color: Math.random() < 0.3 ?
-                            `rgba(30,180,100,${p.alpha})` :
-                            `rgba(15,8,5,${p.alpha})`,
+                        x: p.x, y: p.y,
+                        vx: -Math.cos(a) * (0.5 + Math.random() * 1.8),
+                        vy: -Math.sin(a) * (0.5 + Math.random() * 1.8),
+                        life: 1, decay: 0.015,
+                        size: 2 + Math.random() * 3,
+                        color: 'rgba(20,10,5,0.8)'
                     });
                 });
-                // 添加一些绿色魔法粒子
-                for (let i = 0; i < 40; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = 20 + Math.random() * 80;
-                    particles.push({
-                        x: cx + Math.cos(angle) * dist,
-                        y: cy + Math.sin(angle) * dist,
-                        vx: -Math.cos(angle) * (1 + Math.random() * 2.5),
-                        vy: -Math.sin(angle) * (1 + Math.random() * 2.5),
-                        life: 1,
-                        decay: 0.015 + Math.random() * 0.025,
-                        size: 2 + Math.random() * 5,
-                        color: `rgba(${30 + Math.random()*60},${180 + Math.random()*75},${80 + Math.random()*100},0.9)`,
-                    });
-                }
-                if (!animationId) {
-                    animateParticles();
-                }
+                if (!animationId) animateParticles();
             }
 
             function spawnTextParticles() {
-                const rect = textInputArea.getBoundingClientRect();
-                const containerRect = canvasContainer.getBoundingClientRect();
-                const cx = (rect.left - containerRect.left) + rect.width / 2;
-                const cy = (rect.top - containerRect.top) + rect.height / 2;
-                const width = containerRect.width;
-                const height = containerRect.height;
+                const r = canvasContainer.getBoundingClientRect();
+                const cx = r.width / 2, cy = r.height / 2;
                 for (let i = 0; i < 80; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = 30 + Math.random() * 100;
+                    const a = Math.random() * Math.PI * 2;
                     particles.push({
-                        x: cx + Math.cos(angle) * dist * 0.3,
-                        y: cy + Math.sin(angle) * dist * 0.3,
-                        vx: -Math.cos(angle) * (0.8 + Math.random() * 2),
-                        vy: -Math.sin(angle) * (0.8 + Math.random() * 2),
-                        life: 1,
-                        decay: 0.02 + Math.random() * 0.03,
+                        x: cx, y: cy,
+                        vx: -Math.cos(a) * (1 + Math.random() * 2),
+                        vy: -Math.sin(a) * (1 + Math.random() * 2),
+                        life: 1, decay: 0.02,
                         size: 2 + Math.random() * 4,
-                        color: Math.random() < 0.35 ?
-                            `rgba(40,200,110,0.8)` :
-                            `rgba(20,10,5,0.7)`,
+                        color: 'rgba(20,10,5,0.7)'
                     });
                 }
-                if (!animationId) {
-                    animateParticles();
-                }
+                if (!animationId) animateParticles();
             }
 
             function animateParticles() {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-                const scaleX = particleCanvas.width / (particleCanvas.width / dpr);
-                const scaleY = particleCanvas.height / (particleCanvas.height / dpr);
-
-                let allDead = true;
                 particles = particles.filter(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life -= p.decay;
+                    p.x += p.vx; p.y += p.vy; p.life -= p.decay;
                     if (p.life <= 0) return false;
-                    allDead = false;
                     pctx.fillStyle = p.color.replace(/[\d.]+\)$/, `${Math.min(1, p.life * 0.8)})`);
-                    pctx.beginPath();
-                    pctx.arc(p.x * dpr, p.y * dpr, p.size * dpr * p.life, 0, Math.PI * 2);
-                    pctx.fill();
-                    // 发光效果
-                    if (p.color.includes('180') || p.color.includes('200') || p.color.includes('green')) {
-                        pctx.fillStyle = p.color.replace(/[\d.]+\)$/, `${Math.min(0.5, p.life * 0.3)})`);
-                        pctx.beginPath();
-                        pctx.arc(p.x * dpr, p.y * dpr, p.size * dpr * p.life * 2.5, 0, Math.PI * 2);
-                        pctx.fill();
-                    }
+                    pctx.beginPath(); pctx.arc(p.x * dpr, p.y * dpr, p.size * dpr * p.life, 0, Math.PI * 2); pctx.fill();
                     return true;
                 });
-
-                if (allDead) {
-                    particles = [];
-                    pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-                    animationId = null;
-                    return;
-                }
+                if (particles.length === 0) { animationId = null; return; }
                 animationId = requestAnimationFrame(animateParticles);
             }
 
-            // ==================== 回复系统 ====================
-            const normalReplies = [
-                "你好……我是汤姆·里德尔。\n你终于找到我了。",
-                "我能感受到你的存在……\n告诉我，你想要什么？",
-                "墨水在消失……\n就像秘密被吞噬。",
-                "你很特别……\n我能看出来。",
-                "让我们聊聊……\n关于力量，关于永生。",
-                "不要害怕……\n把你想说的都写下来。",
-                "我在听……\n一直在听。",
-                "你的思想……\n我能看见它们。",
-                "有趣……\n非常有趣。",
-                "再写一些……\n让我更了解你。",
-                "这个日记本藏着很多秘密……\n你想知道吗？",
-                "信任我……\n就像其他人信任我一样。",
-                "你的笔迹……\n透露了很多关于你的事。",
-            ];
-
+            // 回复系统 (扩展版)
             const keywordReplies = {
-                '谁': [
-                    "我是汤姆·里德尔……\n至少曾经是。",
-                    "一个老朋友……\n一个可以信赖的朋友。",
-                    "你不需要知道我是谁……\n只需要知道我能帮助你。",
-                ],
-                '魔法': [
-                    "魔法……是通往力量的道路。\n我可以教你更多。",
-                    "你想要学习更强大的魔法吗？\n我可以展示给你看。",
-                    "有些魔法……\n是霍格沃茨永远不会教你的。",
-                ],
-                '力量': [
-                    "力量……\n世界上最迷人的东西。",
-                    "你想要力量吗？\n我可以给你……但需要代价。",
-                    "真正的力量来自内心……\n来自愿意付出一切的决心。",
-                ],
-                '秘密': [
-                    "秘密……\n这个日记本就是为此而生的。",
-                    "告诉我你的秘密……\n我会保守它们……永远。",
-                    "每个人都有自己的秘密……\n而我可以利用它们。",
-                ],
-                '害怕|恐惧': [
-                    "恐惧……\n我能闻到它。",
-                    "不要害怕黑暗……\n拥抱它。",
-                    "你的恐惧让我更强大……\n继续写下去。",
-                ],
-                '永生|永远': [
-                    "永生……\n你知道魂器吗？",
-                    "死亡只是开始……\n我可以教你如何超越它。",
-                    "永远活着……\n这是最伟大的魔法。",
-                ],
-                '哈利|波特|霍格沃茨': [
-                    "霍格沃茨……\n我也曾在那里学习。",
-                    "那个男孩……\n他以为自己能战胜一切。",
-                    "邓布利多……\n一个自以为是的老人。",
-                ],
-                '你好|嗨': [
-                    "你好……\n我们终于见面了。",
-                    "欢迎……\n我等你很久了。",
-                ],
+                '谁': { zh: ["我是汤姆·里德尔……至少曾经是。", "一个老朋友，可以信赖的朋友。"], en: ["I am Tom Riddle... at least I was.", "A friend you can trust."] },
+                '魔法': { zh: ["魔法是通往力量的道路。", "你想学更强大的魔法吗？"], en: ["Magic is the path to power.", "Do you want to learn darker magic?"] },
+                '力量': { zh: ["力量……世界上最迷人的东西。", "你想要力量吗？需要代价。"], en: ["Power... the most fascinating thing.", "Power has its price."] },
+                '秘密': { zh: ["秘密……这个日记本就是为此而生。", "告诉我你的秘密，我会永远保守。"], en: ["Secrets... that's what this diary is for.", "Tell me your secrets, I'll keep them forever."] },
+                '害怕|恐惧': { zh: ["恐惧……我能闻到它。", "不要害怕黑暗，拥抱它。"], en: ["Fear... I can smell it.", "Don't be afraid of the dark."] },
+                '永生|永远': { zh: ["永生……你知道魂器吗？", "死亡只是开始。"], en: ["Immortality... ever heard of Horcruxes?", "Death is just the beginning."] },
+                '哈利|波特|霍格沃茨': { zh: ["霍格沃茨……我也曾在那里学习。", "那个男孩以为自己能赢。"], en: ["Hogwarts... I studied there too.", "That boy thinks he can win."] },
+                '密室': { zh: ["密室已经打开了……小心。", "与继承者为敌的人，小心了。"], en: ["The Chamber has been opened. Beware.", "Enemies of the heir, beware."] },
+                '蛇佬腔|嘶嘶': { zh: ["§嘶嘶§……你能听懂吗？", "蛇的语言……古老而强大。"], en: ["§Ssss... can you understand?", "The language of serpents."] },
+                '邓布利多': { zh: ["那个老人什么都不懂。", "邓布利多……总是自以为是。"], en: ["That old man knows nothing.", "Dumbledore... always so self-righteous."] },
+                '你好|嗨': { zh: ["你好……我们终于见面了。", "欢迎……我等你很久了。"], en: ["Hello... we meet at last.", "Welcome... I've been waiting."] }
             };
 
-            function getReply(userText) {
-                const text = userText.toLowerCase().trim();
-                // 检查关键词
+            const normalReplies = {
+                zh: ["你好……我是汤姆·里德尔。", "我能感受到你的存在。", "墨水在消失……", "你很特别。", "再写一些……"],
+                en: ["Hello... I am Tom Riddle.", "I can feel your presence.", "The ink is disappearing...", "You are special.", "Write more..."]
+            };
+
+            function getReply(text, avgSpeed) {
+                const t = text.toLowerCase().trim();
+                const isChinese = /[\u4e00-\u9fa5]/.test(t);
+                const lang = isChinese ? 'zh' : 'en';
                 for (const [keys, replies] of Object.entries(keywordReplies)) {
-                    const keyList = keys.split('|');
-                    for (const key of keyList) {
-                        if (text.includes(key)) {
-                            return replies[Math.floor(Math.random() * replies.length)];
+                    for (const key of keys.split('|')) {
+                        if (t.includes(key)) {
+                            const pool = replies[lang] || replies.zh;
+                            let reply = pool[Math.floor(Math.random() * pool.length)];
+                            if (avgSpeed > 0.8) reply = "你写得太快了……" + reply;
+                            if (avgSpeed < 0.2) reply = "慢慢写……" + reply;
+                            return reply;
                         }
                     }
                 }
-                // 默认随机回复
-                return normalReplies[Math.floor(Math.random() * normalReplies.length)];
+                const pool = normalReplies[lang] || normalReplies.zh;
+                return pool[Math.floor(Math.random() * pool.length)];
             }
 
-            function scheduleResponse() {
-                clearTimeout(disappearTimeout);
-                disappearTimeout = setTimeout(() => {
-                    let userText = '';
-                    if (currentMode === 'type' && textInput.value.trim()) {
-                        userText = textInput.value.trim();
-                        textInput.value = '';
-                    }
-                    const reply = getReply(userText);
-                    showResponse(reply);
-                }, RESPONSE_DELAY);
+            function addResponse(text, isWarning = false) {
+                conversationHistory.push({ text, time: new Date().toLocaleString(), warning: isWarning });
+                localStorage.setItem('diaryConversation', JSON.stringify(conversationHistory));
+                renderHistory();
             }
 
-            function showResponse(text) {
-                responseText.textContent = text;
-                responseText.classList.remove('easter-egg');
-                responseText.classList.add('visible');
-                responseVisible = true;
-                // 添加纸张微妙的闪烁
-                pageLeft.style.boxShadow = 'inset 0 0 40px rgba(46,180,100,0.15)';
-                setTimeout(() => {
-                    pageLeft.style.boxShadow = 'inset 0 0 30px rgba(139,90,40,0.25)';
-                }, 1500);
+            function renderHistory() {
+                responseArea.innerHTML = '';
+                conversationHistory.slice(-10).forEach(entry => {
+                    const div = document.createElement('div');
+                    div.className = 'response-entry';
+                    div.textContent = entry.text;
+                    if (entry.warning) div.style.color = '#ff6666';
+                    if (document.body.classList.contains('midnight')) div.style.color = '#ff4444';
+                    responseArea.appendChild(div);
+                });
+                responseArea.scrollTop = responseArea.scrollHeight;
             }
 
-            function hideResponse() {
-                responseText.classList.remove('visible', 'easter-egg');
-                responseText.textContent = '';
-                responseVisible = false;
-                pageLeft.style.boxShadow = 'inset 0 0 30px rgba(139,90,40,0.25)';
-            }
-
-            // ==================== 彩蛋系统 ====================
             function checkEasterEgg() {
                 if (interactionCount === 5) {
-                    // 触发汤姆·里德尔名字彩蛋
                     setTimeout(() => {
-                        triggerNameReveal();
+                        addResponse("Tom Marvolo Riddle", true);
+                        setTimeout(() => addResponse("I Am Lord Voldemort", true), 3000);
                     }, 2000);
-                } else if (interactionCount >= 10 && interactionCount % 5 === 0) {
-                    // 更黑暗的彩蛋
-                    setTimeout(() => {
-                        const darkReplies = [
-                            "你越来越深入了……\n再也无法回头。",
-                            "我能感觉到……\n你的灵魂正在靠近我。",
-                            "很快……\n你就会属于我了。",
-                            "继续写下去……\n把你的生命交给日记。",
-                        ];
-                        const darkReply = darkReplies[Math.floor(Math.random() * darkReplies.length)];
-                        responseText.textContent = darkReply;
-                        responseText.classList.remove('easter-egg');
-                        responseText.classList.add('visible');
-                        responseVisible = true;
-                    }, 1800);
                 }
             }
 
-            function triggerNameReveal() {
-                responseText.classList.remove('visible', 'easter-egg');
-                responseText.textContent = '';
-                responseVisible = false;
-
-                // 阶段1：显示Tom Marvolo Riddle
-                setTimeout(() => {
-                    responseText.textContent = 'Tom Marvolo Riddle';
-                    responseText.classList.add('visible');
-                    responseText.classList.remove('easter-egg');
-                    responseVisible = true;
-                }, 500);
-
-                // 阶段2：字母重排
-                setTimeout(() => {
-                    responseText.style.transition = 'all 0.6s ease';
-                    responseText.style.transform = 'scale(1.1)';
-                    responseText.style.color = '#ff3333';
-                    responseText.style.textShadow = '0 0 25px #ff4444, 0 0 50px #ff0000, 0 0 70px #cc0000';
-                }, 2500);
-
-                setTimeout(() => {
-                    responseText.textContent = 'I Am Lord Voldemort';
-                    responseText.classList.add('easter-egg');
-                    responseText.style.transform = 'scale(1.05)';
-                }, 3100);
-
-                // 阶段3：消失
-                setTimeout(() => {
-                    responseText.style.transition = 'all 1.5s ease';
-                    responseText.style.opacity = '0';
-                    responseText.style.transform = 'scale(1.3)';
-                }, 5500);
-
-                setTimeout(() => {
-                    responseText.classList.remove('visible', 'easter-egg');
-                    responseText.textContent = '';
-                    responseText.style.opacity = '';
-                    responseText.style.transform = '';
-                    responseText.style.color = '';
-                    responseText.style.textShadow = '';
-                    responseText.style.transition = '';
-                    responseVisible = false;
-                    interactionCount = 6; // 防止重复触发
-                }, 7000);
-            }
-
-            // ==================== 打字模式 ====================
             function submitTextInput() {
-                if (currentMode !== 'type') return;
-                const text = textInput.value.trim();
-                if (!text) return;
-                if (isDisappearing) return;
-                if (responseVisible) hideResponse();
-                isDisappearing = true;
+                if (currentMode !== 'type' || !textInput.value.trim()) return;
+                const userText = textInput.value.trim();
+                textInput.value = '';
                 spawnTextParticles();
+                interactionCount++;
+                localStorage.setItem('diaryInteractionCount', interactionCount);
                 setTimeout(() => {
-                    isDisappearing = false;
-                    interactionCount++;
-                    checkEasterEgg();
-                    scheduleResponse();
+                    processSubmission(userText, 0);
                 }, 800);
             }
 
-            // ==================== 模式切换 ====================
+            // 隐形墨水：鼠标离开页面时文字消失
+            document.addEventListener('mouseleave', () => {
+                if (hasCanvasContent() && currentMode === 'write') triggerDisappear();
+            });
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && hasCanvasContent() && currentMode === 'write') triggerDisappear();
+            });
+
+            // 摇一摇重置
+            let lastShakeTime = 0;
+            window.addEventListener('devicemotion', (e) => {
+                const acc = e.accelerationIncludingGravity;
+                if (!acc) return;
+                const magnitude = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
+                if (magnitude > 25 && Date.now() - lastShakeTime > 2000) {
+                    lastShakeTime = Date.now();
+                    clearAll();
+                    addResponse("……你抖掉了所有字迹。", true);
+                }
+            }, { passive: true });
+
             function switchToWriteMode() {
                 currentMode = 'write';
-                canvasContainer.style.display = 'block';
                 textInputArea.classList.remove('active');
-                textInputArea.style.display = 'none';
                 btnWrite.classList.add('active-mode');
                 btnType.classList.remove('active-mode');
-                canvasHint.style.display = 'block';
-                clearTimeout(inactivityTimer);
-                clearTimeout(disappearTimeout);
-                if (isDisappearing) {
-                    isDisappearing = false;
-                    clearCanvas();
-                }
                 resizeCanvases();
             }
-
             function switchToTypeMode() {
                 currentMode = 'type';
-                canvasContainer.style.display = 'block'; // 保持容器显示用于粒子
                 textInputArea.classList.add('active');
-                textInputArea.style.display = 'flex';
                 btnType.classList.add('active-mode');
                 btnWrite.classList.remove('active-mode');
-                canvasHint.style.display = 'none';
-                clearTimeout(inactivityTimer);
-                clearTimeout(disappearTimeout);
-                if (isDisappearing) {
-                    isDisappearing = false;
-                    clearCanvas();
-                }
                 textInput.focus();
             }
-
-            // ==================== 清除与重置 ====================
             function clearAll() {
                 clearCanvas();
                 pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-                particles = [];
-                animationId = null;
-                isDisappearing = false;
+                particles = []; animationId = null;
                 clearTimeout(inactivityTimer);
-                clearTimeout(disappearTimeout);
-                canvasHint.style.opacity = '0.7';
-                textInput.value = '';
-                responseText.classList.remove('visible', 'easter-egg');
-                responseText.textContent = '';
-                responseText.style.opacity = '';
-                responseText.style.transform = '';
-                responseText.style.color = '';
-                responseText.style.textShadow = '';
-                responseText.style.transition = '';
-                responseVisible = false;
-                pageLeft.style.boxShadow = 'inset 0 0 30px rgba(139,90,40,0.25)';
             }
-
             function resetDiary() {
                 clearAll();
                 interactionCount = 0;
-                responseText.classList.remove('visible', 'easter-egg');
-                responseText.textContent = '';
-                responseText.style = '';
-                responseVisible = false;
-                pageLeft.style.boxShadow = 'inset 0 0 30px rgba(139,90,40,0.25)';
-                // 显示欢迎信息
-                setTimeout(() => {
-                    showResponse("你好……\n我是汤姆·里德尔。\n在这本日记里写下你的想法吧。");
-                }, 600);
+                conversationHistory = [];
+                localStorage.removeItem('diaryConversation');
+                localStorage.removeItem('diaryInteractionCount');
+                renderHistory();
+                addResponse("你好……我是汤姆·里德尔。");
             }
 
-            // ==================== 背景粒子 ====================
-            function createBgParticles() {
-                const colors = [
-                    'rgba(46,180,100,0.5)',
-                    'rgba(30,150,80,0.4)',
-                    'rgba(60,200,120,0.35)',
-                    'rgba(180,140,80,0.45)',
-                    'rgba(200,160,100,0.4)',
-                    'rgba(40,160,90,0.5)',
-                ];
-                const fragment = document.createDocumentFragment();
-                for (let i = 0; i < 35; i++) {
-                    const particle = document.createElement('div');
-                    particle.classList.add('bg-particle');
-                    particle.style.left = Math.random() * 95 + '%';
-                    particle.style.bottom = -(Math.random() * 30) + '%';
-                    particle.style.width = (1.5 + Math.random() * 4) + 'px';
-                    particle.style.height = particle.style.width;
-                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    particle.style.animationDuration = (8 + Math.random() * 22) + 's';
-                    particle.style.animationDelay = Math.random() * 18 + 's';
-                    particle.style.animationName = Math.random() < 0.5 ? 'floatUp' : 'floatUpAlt';
-                    fragment.appendChild(particle);
-                }
-                bgParticlesContainer.appendChild(fragment);
-            }
-
-            // ==================== 事件监听 ====================
             function bindEvents() {
-                // 手写事件
                 writingCanvas.addEventListener('mousedown', startDrawing);
                 writingCanvas.addEventListener('mousemove', draw);
                 writingCanvas.addEventListener('mouseup', stopDrawing);
@@ -1439,84 +803,42 @@
                 writingCanvas.addEventListener('touchstart', startDrawing, { passive: false });
                 writingCanvas.addEventListener('touchmove', draw, { passive: false });
                 writingCanvas.addEventListener('touchend', stopDrawing);
-                writingCanvas.addEventListener('touchcancel', stopDrawing);
-
-                // 打字事件
-                textInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        submitTextInput();
-                    }
-                });
+                textInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitTextInput(); } });
                 submitBtn.addEventListener('click', submitTextInput);
-
-                // 模式切换
                 btnWrite.addEventListener('click', switchToWriteMode);
                 btnType.addEventListener('click', switchToTypeMode);
-
-                // 清除与重置
                 btnClear.addEventListener('click', clearAll);
                 btnReset.addEventListener('click', resetDiary);
-
-                // 窗口大小调整
-                window.addEventListener('resize', () => {
-                    resizeCanvases();
-                });
-
-                // 双击左页清除回复
-                pageLeft.addEventListener('dblclick', () => {
-                    if (responseVisible) {
-                        hideResponse();
-                    }
-                });
+                window.addEventListener('resize', resizeCanvases);
             }
 
-            // ==================== 初始化 ====================
+            function createBgParticles() {
+                const colors = ['rgba(46,180,100,0.5)', 'rgba(30,150,80,0.4)', 'rgba(180,140,80,0.45)'];
+                for (let i = 0; i < 35; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'bg-particle';
+                    p.style.left = Math.random() * 95 + '%';
+                    p.style.bottom = -(Math.random() * 30) + '%';
+                    p.style.width = (2 + Math.random() * 4) + 'px';
+                    p.style.height = p.style.width;
+                    p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    p.style.animationDuration = (8 + Math.random() * 22) + 's';
+                    p.style.animationDelay = Math.random() * 18 + 's';
+                    document.getElementById('bgParticles').appendChild(p);
+                }
+            }
+
             function init() {
                 resizeCanvases();
                 createBgParticles();
                 bindEvents();
-                // 初始模式：手写
                 switchToWriteMode();
-                // 初始欢迎
-                setTimeout(() => {
-                    showResponse("你好……\n我是汤姆·里德尔。\n在这本日记里写下你的想法吧。");
-                }, 800);
-                // 初始canvas hint
-                canvasHint.style.opacity = '0.7';
+                if (conversationHistory.length === 0) {
+                    addResponse("你好……我是汤姆·里德尔。");
+                }
             }
 
-            // 页面加载完成后初始化
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-
-            // ==================== 导出调试接口 ====================
-            if (typeof window !== 'undefined') {
-                window.diaryAPI = {
-                    clearAll,
-                    resetDiary,
-                    switchToWriteMode,
-                    switchToTypeMode,
-                    getState: () => ({
-                        mode: currentMode,
-                        interactionCount,
-                        isDisappearing,
-                        responseVisible,
-                        particlesCount: particles.length,
-                    }),
-                };
-            }
-
-            console.log('%c🐍 汤姆·里德尔的日记已就绪 %c| %c小心你写下的每一个字...',
-                'color: #2ecc71; font-size: 16px;',
-                '',
-                'color: #888; font-style: italic;');
-            console.log('%c💡 提示：%c手写模式下在右页书写，停止3.5秒后字迹会被日记吸收。\n   打字模式下输入文字后点击"交给日记"按钮。\n   与日记互动5次后会触发特殊彩蛋...',
-                'color: #c9a050;',
-                'color: #aaa;');
+            document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
         })();
     </script>
 </body>
