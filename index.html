@@ -4,33 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>汤姆·里德尔的日记</title>
-
-    <!-- SEO & Social Share -->
     <meta name="description" content="一本能与使用者对话的魔法日记，汤姆·里德尔的魂器。">
     <meta property="og:title" content="汤姆·里德尔的日记">
     <meta property="og:description" content="写下你的秘密，日记会回应你……">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>">
-    <meta name="twitter:card" content="summary">
-
-    <!-- Favicon (蛇形图标) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>">
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIuWuiOeTnGzCt+mHjOW+t+WwlOeahOaXpeiusCIsCiAgInNob3J0X25hbWUiOiAi5pel6K6w5pysIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZDBhMDciLAogICJpY29ucyI6IFt7CiAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnPjx0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnPvCfkI08L3RleHQ+PC9zdmc+IiwKICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgfV0KfQ==">
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Long+Cang&display=swap');
 
         :root {
-            --bg: #0d0a07;
-            --cover: #3a1f0d;
             --page: #f0ddb8;
             --ink: #1a1410;
             --green: #2ecc71;
             --green-glow: #5dffa0;
-            --midnight-red: #8b0000;
         }
 
         * {
@@ -40,7 +25,7 @@
         }
 
         body {
-            background: var(--bg);
+            background: #0a0502;
             background-image: radial-gradient(ellipse at center, #1a0f05 0%, #0a0502 70%, #000 100%);
             min-height: 100vh;
             display: flex;
@@ -48,17 +33,11 @@
             justify-content: center;
             font-family: 'MedievalSharp', 'Georgia', serif;
             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='28'>🖋️</text></svg>") 4 24, auto;
-            overflow-x: hidden;
-            transition: background 1s;
-            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
-        /* 午夜模式 */
-        body.midnight {
-            background: #000;
-            background-image: radial-gradient(circle at center, #1a0000 0%, #000 100%);
-        }
-
+        /* 背景魔法粒子 */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -72,67 +51,43 @@
         .bg-particle {
             position: absolute;
             border-radius: 50%;
-            pointer-events: none;
             animation: floatUp linear infinite;
             opacity: 0;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 0; }
-            10% { opacity: 0.7; }
+            10% { opacity: 0.6; }
             90% { opacity: 0.1; }
             100% { transform: translateY(-120vh) scale(0.2); opacity: 0; }
         }
 
-        .main-container {
+        /* 日记页面 - 单张牛皮纸 */
+        .diary-page {
             position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .diary-wrapper {
-            perspective: 1200px;
-        }
-
-        .diary {
-            display: flex;
-            border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            transform: rotateX(3deg);
-            transition: transform 0.6s;
-        }
-
-        .page-outer-left, .page-outer-right {
-            background: var(--cover);
-            background-image: linear-gradient(135deg, #3d1f0d 0%, #2a1005 100%);
-            padding: 6px 4px;
-            box-shadow: -3px 2px 8px rgba(0,0,0,0.5);
-        }
-
-        .page-outer-left { border-radius: 8px 2px 2px 8px; padding-left: 8px; }
-        .page-outer-right { border-radius: 2px 8px 8px 2px; padding-right: 8px; }
-
-        .page {
+            width: 90vw;
+            max-width: 650px;
+            height: 85vh;
+            max-height: 800px;
             background: var(--page);
             background-image:
                 linear-gradient(to bottom, #f5e6c8 0%, #f0ddb8 15%, #ecd4a5 30%, #f0ddb8 50%, #e8cd98 70%, #f2dfbc 100%),
                 radial-gradient(ellipse at 30% 20%, rgba(210,180,120,0.35) 0%, transparent 60%),
                 radial-gradient(ellipse at 70% 75%, rgba(200,160,100,0.3) 0%, transparent 55%),
-                /* 咖啡渍斑点 */
-                radial-gradient(circle at 15% 85%, rgba(120, 70, 30, 0.25) 0%, rgba(120,70,30,0.1) 15%, transparent 30%),
-                radial-gradient(circle at 85% 10%, rgba(100, 60, 20, 0.2) 0%, rgba(100,60,20,0.08) 20%, transparent 40%),
-                radial-gradient(circle at 40% 90%, rgba(130, 80, 40, 0.3) 0%, rgba(130,80,40,0.1) 25%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(90, 50, 20, 0.15) 0%, transparent 35%);
-            border-radius: 2px;
-            position: relative;
+                radial-gradient(circle at 15% 85%, rgba(120,70,30,0.25) 0%, transparent 30%),
+                radial-gradient(circle at 85% 10%, rgba(100,60,20,0.2) 0%, transparent 40%);
+            border-radius: 4px;
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.6),
+                inset 0 0 30px rgba(139,90,40,0.3);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(139,90,40,0.25);
         }
 
-        .page::before {
+        /* 纸纹理 */
+        .diary-page::before {
             content: '';
             position: absolute;
             top: 0;
@@ -143,158 +98,106 @@
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(180,140,90,0.06) 2px, rgba(180,140,90,0.06) 3px),
                 repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(160,120,70,0.04) 40px, rgba(160,120,70,0.04) 41px);
             pointer-events: none;
-            z-index: 2;
-        }
-
-        .page-left {
-            width: 340px;
-            min-height: 480px;
-            padding: 25px 20px 25px 30px;
-            display: flex;
-            flex-direction: column;
             z-index: 3;
+            border-radius: inherit;
         }
 
-        .page-right {
-            width: 340px;
-            min-height: 480px;
-            padding: 25px 30px 25px 20px;
-            display: flex;
-            flex-direction: column;
-            z-index: 3;
-        }
-
-        .spine-line {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(to right, rgba(0,0,0,0.25), rgba(0,0,0,0.08), rgba(0,0,0,0.2));
-            z-index: 10;
-            pointer-events: none;
-        }
-        .page-left .spine-line { right: 0; }
-        .page-right .spine-line { left: 0; }
-
-        .diary-label, .writing-label {
-            text-align: center;
-            font-size: 14px;
-            color: #6b5040;
-            letter-spacing: 2px;
-            font-style: italic;
-            opacity: 0.8;
-            margin-bottom: 6px;
-        }
-
-        .diary-owner {
-            text-align: center;
-            font-size: 16px;
-            color: #4a3028;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(100,70,40,0.3);
-            padding-bottom: 10px;
-        }
-
-        .response-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            max-height: 250px;
-            margin-bottom: 10px;
-            z-index: 5;
-        }
-
-        .response-entry {
-            font-size: 15px;
-            color: var(--green);
-            text-shadow: 0 0 10px var(--green-glow);
-            text-align: center;
-            letter-spacing: 1px;
-            line-height: 1.8;
-            font-style: italic;
-            padding: 8px;
-            margin: 4px 0;
-            animation: fadeIn 0.6s ease;
-            border-bottom: 1px dashed rgba(100,70,40,0.2);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .snake-decoration {
-            position: absolute;
-            opacity: 0.06;
-            pointer-events: none;
-            z-index: 1;
-            font-size: 120px;
-            color: #3a6b3a;
-        }
-        .page-left .snake-decoration { bottom: 30px; left: 50%; transform: translateX(-50%) rotate(-15deg); }
-        .page-right .snake-decoration { bottom: 30px; right: 40px; transform: rotate(10deg); font-size: 90px; }
-
-        .canvas-container {
+        /* 书写区与回复区共用的容器 */
+        .writing-surface {
             position: relative;
             flex: 1;
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='28'>🖋️</text></svg>") 4 24, auto;
-            border: 1px dashed rgba(139,100,60,0.25);
-            border-radius: 6px;
-            min-height: 250px;
+            width: 100%;
+            overflow: hidden;
             z-index: 5;
-            background: transparent;
         }
 
         canvas#writingCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 6px;
             touch-action: none;
+            z-index: 6;
+            border-radius: 4px;
         }
 
-        .canvas-hint {
+        canvas#particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        /* 回复文字层 */
+        .response-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            pointer-events: none;
-            color: #b8a080;
-            font-size: 15px;
-            letter-spacing: 1px;
+            z-index: 7;
+            color: var(--green);
+            text-shadow: 0 0 15px var(--green-glow), 0 0 30px var(--green), 0 0 50px #1a7a3a;
+            font-size: 22px;
+            letter-spacing: 2px;
             text-align: center;
-            opacity: 0.7;
+            line-height: 1.8;
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.8s;
+            pointer-events: none;
+            max-width: 80%;
+            word-break: break-word;
         }
 
-        .text-input-area {
+        .response-overlay.visible {
+            opacity: 1;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 15px var(--green-glow), 0 0 30px var(--green), 0 0 50px #1a7a3a; }
+            50% { text-shadow: 0 0 25px var(--green-glow), 0 0 45px #7fffbb, 0 0 70px var(--green), 0 0 90px #1a7a3a; }
+        }
+
+        /* 打字输入层（默认隐藏） */
+        .text-input-overlay {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            bottom: 20px;
+            z-index: 9;
             display: none;
-            flex: 1;
             flex-direction: column;
-            min-height: 250px;
+            background: rgba(240, 221, 184, 0.85);
+            border: 2px dashed rgba(139,100,60,0.5);
+            border-radius: 8px;
+            padding: 20px;
+            backdrop-filter: blur(4px);
         }
+        .text-input-overlay.active { display: flex; }
 
-        .text-input-area.active { display: flex; }
-
-        .text-input-area textarea {
+        .text-input-overlay textarea {
             flex: 1;
             background: transparent;
-            border: 1px dashed rgba(139,100,60,0.3);
-            border-radius: 6px;
-            padding: 15px;
-            font-family: 'Long Cang', 'MedievalSharp', serif;
+            border: none;
+            font-family: inherit;
             font-size: 18px;
             color: var(--ink);
             resize: none;
             outline: none;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             line-height: 1.8;
         }
 
-        .submit-btn {
-            margin-top: 8px;
-            padding: 8px 20px;
+        .text-input-overlay .submit-btn {
+            align-self: center;
+            margin-top: 10px;
+            padding: 8px 25px;
             background: var(--ink);
             color: #d4c0a0;
             border: none;
@@ -302,178 +205,150 @@
             cursor: pointer;
             font-family: inherit;
             letter-spacing: 2px;
-            font-size: 13px;
-            align-self: center;
+            font-size: 14px;
         }
 
-        .toolbar {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .tool-btn {
-            padding: 10px 18px;
-            background: rgba(30,15,5,0.8);
-            color: #c9a050;
-            border: 1px solid rgba(201,160,80,0.4);
-            border-radius: 25px;
+        /* 隐藏的工具栏触发点 */
+        .secret-menu-trigger {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            z-index: 10;
+            font-size: 28px;
+            opacity: 0.3;
             cursor: pointer;
+            transition: opacity 0.3s;
+            user-select: none;
+        }
+        .secret-menu-trigger:hover { opacity: 0.8; }
+
+        .hidden-menu {
+            position: absolute;
+            top: 45px;
+            right: 10px;
+            z-index: 11;
+            background: rgba(20,10,5,0.9);
+            border: 1px solid #c9a050;
+            border-radius: 8px;
+            padding: 8px 0;
+            display: none;
+            flex-direction: column;
+            backdrop-filter: blur(6px);
+        }
+        .hidden-menu.show { display: flex; }
+
+        .hidden-menu button {
+            background: none;
+            border: none;
+            color: #c9a050;
+            padding: 10px 20px;
+            text-align: left;
             font-family: inherit;
             letter-spacing: 1px;
-            font-size: 13px;
-            transition: all 0.35s;
-            backdrop-filter: blur(4px);
-        }
-
-        .tool-btn.active-mode {
-            background: rgba(46,150,80,0.3);
-            border-color: var(--green);
-            color: var(--green-glow);
-        }
-
-        .audio-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 100;
-            background: rgba(0,0,0,0.7);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 12px;
             cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .hidden-menu button:hover { background: rgba(201,160,80,0.2); color: #e0c070; }
+
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            font-size: 16px;
+            color: #6b5040;
+            letter-spacing: 3px;
+            opacity: 0.7;
+            padding: 12px 0 5px;
+            font-style: italic;
+            pointer-events: none;
+            z-index: 4;
+            position: relative;
         }
 
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .diary { flex-direction: column; transform: none; }
-            .page-left, .page-right { width: 100%; min-height: auto; padding: 15px; }
-            .page-left { min-height: 200px; }
-            .page-right { min-height: 320px; }
-            .snake-decoration { font-size: 50px !important; }
-            .toolbar { gap: 8px; }
-            .tool-btn { padding: 8px 12px; font-size: 11px; }
+        @media (max-width: 600px) {
+            .diary-page {
+                width: 95vw;
+                height: 90vh;
+                max-height: none;
+            }
+            .response-overlay {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="bg-particles" id="bgParticles"></div>
 
-    <!-- 背景音频（可选） -->
-    <audio id="bgAudio" loop preload="none" src="" volume="0.3"></audio>
-    <button class="audio-toggle" id="audioToggle">🔇 开启氛围音</button>
+    <div class="diary-page" id="diaryPage">
+        <div class="page-title">汤姆·里德尔的日记</div>
 
-    <div class="main-container">
-        <div class="diary-wrapper">
-            <div class="diary" id="diaryBook">
-                <div class="page-outer-left">
-                    <div class="page page-left" id="pageLeft">
-                        <div class="spine-line"></div>
-                        <div class="diary-label">▸ 汤姆·里德尔的日记 ◂</div>
-                        <div class="diary-owner">T. M. Riddle</div>
-                        <div class="response-area" id="responseArea"></div>
-                        <div class="snake-decoration">🐍</div>
-                    </div>
-                </div>
-                <div class="page-outer-right">
-                    <div class="page page-right" id="pageRight">
-                        <div class="spine-line"></div>
-                        <div class="writing-label">✍ 在此书写你的秘密...</div>
-                        <div class="canvas-container" id="canvasContainer">
-                            <canvas id="writingCanvas"></canvas>
-                            <canvas id="particleCanvas" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
-                            <div class="canvas-hint">用羽毛笔在此书写<br>或切换至打字模式</div>
-                        </div>
-                        <div class="text-input-area" id="textInputArea">
-                            <textarea id="textInput" placeholder="写下你想说的话..." rows="5"></textarea>
-                            <button class="submit-btn" id="submitBtn">✦ 交给日记 ✦</button>
-                        </div>
-                        <div class="snake-decoration">🐍</div>
-                    </div>
-                </div>
+        <div class="writing-surface" id="writingSurface">
+            <canvas id="writingCanvas"></canvas>
+            <canvas id="particleCanvas"></canvas>
+            <div class="response-overlay" id="responseOverlay"></div>
+
+            <!-- 打字模式覆盖层 -->
+            <div class="text-input-overlay" id="textInputOverlay">
+                <textarea id="textInput" placeholder="用文字与日记对话..."></textarea>
+                <button class="submit-btn" id="submitBtn">✦ 交给日记 ✦</button>
             </div>
         </div>
-        <div class="toolbar">
-            <button class="tool-btn active-mode" id="btnWrite">🖊️ 手写</button>
-            <button class="tool-btn" id="btnType">⌨️ 打字</button>
-            <button class="tool-btn" id="btnClear">🧹 清除</button>
-            <button class="tool-btn" id="btnReset">🔄 重置</button>
+
+        <!-- 隐藏菜单 -->
+        <div class="secret-menu-trigger" id="menuTrigger">🐍</div>
+        <div class="hidden-menu" id="hiddenMenu">
+            <button id="menuClear">🧹 清除字迹</button>
+            <button id="menuReset">🔄 重置日记</button>
+            <button id="menuToggleMode">⌨️ 切换打字模式</button>
         </div>
     </div>
 
     <script>
         (() => {
-            const canvasContainer = document.getElementById('canvasContainer');
+            // DOM元素
+            const writingSurface = document.getElementById('writingSurface');
             const writingCanvas = document.getElementById('writingCanvas');
             const particleCanvas = document.getElementById('particleCanvas');
-            const canvasHint = document.querySelector('.canvas-hint');
-            const responseArea = document.getElementById('responseArea');
-            const textInputArea = document.getElementById('textInputArea');
+            const responseOverlay = document.getElementById('responseOverlay');
+            const textInputOverlay = document.getElementById('textInputOverlay');
             const textInput = document.getElementById('textInput');
             const submitBtn = document.getElementById('submitBtn');
-            const btnWrite = document.getElementById('btnWrite');
-            const btnType = document.getElementById('btnType');
-            const btnClear = document.getElementById('btnClear');
-            const btnReset = document.getElementById('btnReset');
-            const audioToggle = document.getElementById('audioToggle');
-            const bgAudio = document.getElementById('bgAudio');
-            const pageLeft = document.getElementById('pageLeft');
+            const menuTrigger = document.getElementById('menuTrigger');
+            const hiddenMenu = document.getElementById('hiddenMenu');
+            const menuClear = document.getElementById('menuClear');
+            const menuReset = document.getElementById('menuReset');
+            const menuToggleMode = document.getElementById('menuToggleMode');
 
             const ctx = writingCanvas.getContext('2d');
             const pctx = particleCanvas.getContext('2d');
 
-            let currentMode = 'write';
+            let currentMode = 'write'; // 'write' | 'type'
             let isDrawing = false;
             let lastX = 0, lastY = 0, lastTime = 0;
             let inactivityTimer = null;
-            const INACTIVITY_DELAY = 3500;
-            const RESPONSE_DELAY = 1500;
-            let interactionCount = parseInt(localStorage.getItem('diaryInteractionCount') || '0');
+            const INACTIVITY_DELAY = 3500; // 停止书写3.5秒
+            const RESPONSE_DELAY = 1500; // 字消失后1.5秒显示回复
+            const REPLY_DURATION = 6000; // 回复显示6秒后自动淡出
+            let interactionCount = 0;
             let particles = [];
             let animationId = null;
-            let strokeCount = 0; // 本次书写笔画数
-            let totalDistance = 0;
-            let speedSamples = [];
+            let replyTimer = null;
 
-            // 对话历史保存
-            let conversationHistory = JSON.parse(localStorage.getItem('diaryConversation') || '[]');
-            renderHistory();
-
-            // 音频控制
-            let audioEnabled = false;
-            audioToggle.addEventListener('click', () => {
-                if (!audioEnabled) {
-                    bgAudio.play().catch(() => {});
-                    audioEnabled = true;
-                    audioToggle.textContent = '🔊 关闭氛围音';
-                } else {
-                    bgAudio.pause();
-                    audioEnabled = false;
-                    audioToggle.textContent = '🔇 开启氛围音';
-                }
-            });
-
-            // 午夜血字检测
-            function checkMidnight() {
-                const hour = new Date().getHours();
-                document.body.classList.toggle('midnight', hour >= 0 && hour < 4);
-            }
-            checkMidnight();
-            setInterval(checkMidnight, 60000);
-
+            // ========== Canvas尺寸管理 ==========
             function resizeCanvases() {
-                const rect = canvasContainer.getBoundingClientRect();
+                const rect = writingSurface.getBoundingClientRect();
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const width = rect.width, height = rect.height;
+
                 if (writingCanvas.width !== width * dpr || writingCanvas.height !== height * dpr) {
+                    // 保存当前笔迹
                     const tempCanvas = document.createElement('canvas');
                     tempCanvas.width = writingCanvas.width;
                     tempCanvas.height = writingCanvas.height;
                     const tempCtx = tempCanvas.getContext('2d');
                     tempCtx.drawImage(writingCanvas, 0, 0);
+
                     writingCanvas.width = width * dpr;
                     writingCanvas.height = height * dpr;
                     writingCanvas.style.width = width + 'px';
@@ -481,6 +356,7 @@
                     ctx.scale(dpr, dpr);
                     ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, width, height);
                 }
+
                 if (particleCanvas.width !== width * dpr || particleCanvas.height !== height * dpr) {
                     particleCanvas.width = width * dpr;
                     particleCanvas.height = height * dpr;
@@ -489,26 +365,31 @@
                 }
             }
 
-            function getCanvasPos(e) { const r = writingCanvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-            function getTouchPos(e) { const t = e.touches[0]; const r = writingCanvas.getBoundingClientRect(); return { x: t.clientX - r.left, y: t.clientY - r.top }; }
+            // ========== 坐标获取 ==========
+            function getCanvasPos(e) {
+                const rect = writingCanvas.getBoundingClientRect();
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+            }
+            function getTouchPos(e) {
+                const rect = writingCanvas.getBoundingClientRect();
+                const t = e.touches[0];
+                return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+            }
 
+            // ========== 书写逻辑 ==========
             function startDrawing(e) {
                 if (currentMode !== 'write') return;
-                // 防误触：只允许单指
-                if (e.type === 'touchstart' && e.touches.length !== 1) return;
+                if (e.type === 'touchstart' && e.touches.length !== 1) return; // 单指防误触
                 e.preventDefault();
                 const pos = e.type === 'touchstart' ? getTouchPos(e) : getCanvasPos(e);
                 isDrawing = true;
                 lastX = pos.x; lastY = pos.y; lastTime = Date.now();
-                strokeCount = 0;
-                totalDistance = 0;
-                speedSamples = [];
                 ctx.fillStyle = '#1a1410';
-                ctx.beginPath(); ctx.arc(pos.x, pos.y, 1.1, 0, 2 * Math.PI); ctx.fill();
+                ctx.beginPath(); ctx.arc(pos.x, pos.y, 1.3, 0, 2 * Math.PI); ctx.fill();
                 ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-                canvasContainer.classList.add('writing');
-                canvasHint.style.opacity = '0.15';
                 clearTimeout(inactivityTimer);
+                hideReply(); // 开始书写时隐藏回复
+                responseOverlay.classList.remove('visible');
             }
 
             function draw(e) {
@@ -518,11 +399,8 @@
                 const pos = e.type === 'touchmove' ? getTouchPos(e) : getCanvasPos(e);
                 const dt = Date.now() - lastTime;
                 const dist = Math.sqrt((pos.x - lastX) ** 2 + (pos.y - lastY) ** 2);
-                totalDistance += dist;
-                strokeCount++;
                 const speed = dt > 0 ? dist / dt : 0;
-                speedSamples.push(speed);
-                const lineWidth = Math.max(1.4, Math.min(3.8, 2.6 - speed * 1.5));
+                const lineWidth = Math.max(1.4, Math.min(4, 2.6 - speed * 1.5));
                 ctx.lineWidth = lineWidth;
                 ctx.strokeStyle = '#1a1410';
                 ctx.shadowColor = 'rgba(20,10,5,0.3)';
@@ -535,29 +413,32 @@
             function stopDrawing() {
                 if (!isDrawing) return;
                 isDrawing = false;
-                canvasContainer.classList.remove('writing');
-                canvasHint.style.opacity = '0.4';
                 lastTime = 0;
-                if (hasCanvasContent()) startInactivityTimer();
+                if (hasCanvasContent()) {
+                    startInactivityTimer();
+                }
             }
 
             function hasCanvasContent() {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const imageData = ctx.getImageData(0, 0, writingCanvas.width, writingCanvas.height);
-                for (let i = 3; i < imageData.data.length; i += 4) if (imageData.data[i] > 10) return true;
+                for (let i = 3; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] > 10) return true;
+                }
                 return false;
             }
 
             function startInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 inactivityTimer = setTimeout(() => {
-                    if (!isDrawing && hasCanvasContent()) triggerDisappear();
+                    if (!isDrawing && hasCanvasContent()) {
+                        triggerDisappear();
+                    }
                 }, INACTIVITY_DELAY);
             }
 
             function triggerDisappear() {
                 if (!hasCanvasContent() && currentMode === 'write') return;
-                const avgSpeed = speedSamples.length ? speedSamples.reduce((a, b) => a + b, 0) / speedSamples.length : 0;
                 clearTimeout(inactivityTimer);
 
                 if (currentMode === 'write') {
@@ -565,24 +446,16 @@
                     spawnInkParticles(imageData);
                     animateCanvasFadeOut(() => {
                         clearCanvas();
-                        canvasHint.style.opacity = '0.7';
                         interactionCount++;
-                        localStorage.setItem('diaryInteractionCount', interactionCount);
-                        processSubmission(null, avgSpeed);
+                        scheduleReply();
                     });
+                } else if (currentMode === 'type' && textInput.value.trim()) {
+                    const userText = textInput.value.trim();
+                    textInput.value = '';
+                    spawnTextParticles();
+                    interactionCount++;
+                    setTimeout(() => scheduleReply(userText), 800);
                 }
-            }
-
-            function processSubmission(userText, avgSpeed = 0) {
-                // 写太多打断检测
-                if (strokeCount > 200 && currentMode === 'write') {
-                    addResponse("太多了……我无法一次吸收这么多。", true);
-                    strokeCount = 0;
-                    return;
-                }
-                const reply = getReply(userText || '', avgSpeed);
-                addResponse(reply, false);
-                checkEasterEgg();
             }
 
             function animateCanvasFadeOut(callback) {
@@ -610,7 +483,8 @@
                 ctx.clearRect(0, 0, writingCanvas.width / dpr, writingCanvas.height / dpr);
             }
 
-            function spawnInkParticles(imageData) { /* 省略粒子代码，保持与之前版本相同 */
+            // ========== 粒子效果 ==========
+            function spawnInkParticles(imageData) {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const w = writingCanvas.width / dpr, h = writingCanvas.height / dpr;
                 const sampled = [];
@@ -635,8 +509,8 @@
             }
 
             function spawnTextParticles() {
-                const r = canvasContainer.getBoundingClientRect();
-                const cx = r.width / 2, cy = r.height / 2;
+                const rect = writingSurface.getBoundingClientRect();
+                const cx = rect.width / 2, cy = rect.height / 2;
                 for (let i = 0; i < 80; i++) {
                     const a = Math.random() * Math.PI * 2;
                     particles.push({
@@ -665,155 +539,166 @@
                 animationId = requestAnimationFrame(animateParticles);
             }
 
-            // 回复系统 (扩展版)
+            // ========== 回复系统 ==========
             const keywordReplies = {
-                '谁': { zh: ["我是汤姆·里德尔……至少曾经是。", "一个老朋友，可以信赖的朋友。"], en: ["I am Tom Riddle... at least I was.", "A friend you can trust."] },
-                '魔法': { zh: ["魔法是通往力量的道路。", "你想学更强大的魔法吗？"], en: ["Magic is the path to power.", "Do you want to learn darker magic?"] },
-                '力量': { zh: ["力量……世界上最迷人的东西。", "你想要力量吗？需要代价。"], en: ["Power... the most fascinating thing.", "Power has its price."] },
-                '秘密': { zh: ["秘密……这个日记本就是为此而生。", "告诉我你的秘密，我会永远保守。"], en: ["Secrets... that's what this diary is for.", "Tell me your secrets, I'll keep them forever."] },
-                '害怕|恐惧': { zh: ["恐惧……我能闻到它。", "不要害怕黑暗，拥抱它。"], en: ["Fear... I can smell it.", "Don't be afraid of the dark."] },
-                '永生|永远': { zh: ["永生……你知道魂器吗？", "死亡只是开始。"], en: ["Immortality... ever heard of Horcruxes?", "Death is just the beginning."] },
-                '哈利|波特|霍格沃茨': { zh: ["霍格沃茨……我也曾在那里学习。", "那个男孩以为自己能赢。"], en: ["Hogwarts... I studied there too.", "That boy thinks he can win."] },
-                '密室': { zh: ["密室已经打开了……小心。", "与继承者为敌的人，小心了。"], en: ["The Chamber has been opened. Beware.", "Enemies of the heir, beware."] },
-                '蛇佬腔|嘶嘶': { zh: ["§嘶嘶§……你能听懂吗？", "蛇的语言……古老而强大。"], en: ["§Ssss... can you understand?", "The language of serpents."] },
-                '邓布利多': { zh: ["那个老人什么都不懂。", "邓布利多……总是自以为是。"], en: ["That old man knows nothing.", "Dumbledore... always so self-righteous."] },
-                '你好|嗨': { zh: ["你好……我们终于见面了。", "欢迎……我等你很久了。"], en: ["Hello... we meet at last.", "Welcome... I've been waiting."] }
+                '谁': ["我是汤姆·里德尔……至少曾经是。", "一个老朋友，可以信赖的朋友。"],
+                '魔法': ["魔法……是通往力量的道路。", "你想学更强大的魔法吗？"],
+                '力量': ["力量……世界上最迷人的东西。", "你想要力量吗？需要付出代价。"],
+                '秘密': ["秘密……这个日记本就是为此而生。", "告诉我你的秘密，我会保守它们。"],
+                '害怕|恐惧': ["恐惧……我能闻到它。", "不要害怕黑暗，拥抱它。"],
+                '永生|永远': ["永生……你知道魂器吗？", "死亡只是开始。"],
+                '哈利|波特|霍格沃茨': ["霍格沃茨……我也曾在那里学习。", "那个男孩以为自己能赢。"],
+                '密室': ["密室已经打开了……小心。", "与继承者为敌的人，小心了。"],
+                '蛇佬腔': ["§嘶嘶§……你能听懂吗？", "蛇的语言……古老而强大。"],
+                '邓布利多': ["那个老人什么都不懂。", "邓布利多……总是自以为是。"],
+                '你好|嗨': ["你好……我们终于见面了。", "欢迎……我等你很久了。"],
+                '伏地魔': ["那是我……过去的我。", "你知道了我的名字。"],
             };
 
-            const normalReplies = {
-                zh: ["你好……我是汤姆·里德尔。", "我能感受到你的存在。", "墨水在消失……", "你很特别。", "再写一些……"],
-                en: ["Hello... I am Tom Riddle.", "I can feel your presence.", "The ink is disappearing...", "You are special.", "Write more..."]
-            };
+            const normalReplies = [
+                "你好……我是汤姆·里德尔。",
+                "我能感受到你的存在。",
+                "墨水在消失……",
+                "你很特别。",
+                "让我们聊聊……",
+                "不要害怕，写下来吧。",
+                "我在听……一直在听。",
+                "你的思想……我能看见它们。",
+                "有趣……非常有趣。",
+                "再写一些……",
+            ];
 
-            function getReply(text, avgSpeed) {
-                const t = text.toLowerCase().trim();
-                const isChinese = /[\u4e00-\u9fa5]/.test(t);
-                const lang = isChinese ? 'zh' : 'en';
+            function getReply(text) {
+                const t = text ? text.toLowerCase().trim() : '';
                 for (const [keys, replies] of Object.entries(keywordReplies)) {
                     for (const key of keys.split('|')) {
                         if (t.includes(key)) {
-                            const pool = replies[lang] || replies.zh;
-                            let reply = pool[Math.floor(Math.random() * pool.length)];
-                            if (avgSpeed > 0.8) reply = "你写得太快了……" + reply;
-                            if (avgSpeed < 0.2) reply = "慢慢写……" + reply;
-                            return reply;
+                            return replies[Math.floor(Math.random() * replies.length)];
                         }
                     }
                 }
-                const pool = normalReplies[lang] || normalReplies.zh;
-                return pool[Math.floor(Math.random() * pool.length)];
+                return normalReplies[Math.floor(Math.random() * normalReplies.length)];
             }
 
-            function addResponse(text, isWarning = false) {
-                conversationHistory.push({ text, time: new Date().toLocaleString(), warning: isWarning });
-                localStorage.setItem('diaryConversation', JSON.stringify(conversationHistory));
-                renderHistory();
+            function scheduleReply(userText = '') {
+                clearTimeout(replyTimer);
+                replyTimer = setTimeout(() => {
+                    const reply = getReply(userText);
+                    showReply(reply);
+                }, RESPONSE_DELAY);
             }
 
-            function renderHistory() {
-                responseArea.innerHTML = '';
-                conversationHistory.slice(-10).forEach(entry => {
-                    const div = document.createElement('div');
-                    div.className = 'response-entry';
-                    div.textContent = entry.text;
-                    if (entry.warning) div.style.color = '#ff6666';
-                    if (document.body.classList.contains('midnight')) div.style.color = '#ff4444';
-                    responseArea.appendChild(div);
-                });
-                responseArea.scrollTop = responseArea.scrollHeight;
+            function showReply(text) {
+                responseOverlay.textContent = text;
+                responseOverlay.classList.add('visible');
+                // 自动淡出
+                clearTimeout(replyTimer);
+                replyTimer = setTimeout(() => {
+                    hideReply();
+                }, REPLY_DURATION);
             }
 
-            function checkEasterEgg() {
-                if (interactionCount === 5) {
-                    setTimeout(() => {
-                        addResponse("Tom Marvolo Riddle", true);
-                        setTimeout(() => addResponse("I Am Lord Voldemort", true), 3000);
-                    }, 2000);
-                }
+            function hideReply() {
+                responseOverlay.classList.remove('visible');
+                clearTimeout(replyTimer);
             }
 
-            function submitTextInput() {
-                if (currentMode !== 'type' || !textInput.value.trim()) return;
-                const userText = textInput.value.trim();
-                textInput.value = '';
-                spawnTextParticles();
-                interactionCount++;
-                localStorage.setItem('diaryInteractionCount', interactionCount);
-                setTimeout(() => {
-                    processSubmission(userText, 0);
-                }, 800);
-            }
-
-            // 隐形墨水：鼠标离开页面时文字消失
-            document.addEventListener('mouseleave', () => {
-                if (hasCanvasContent() && currentMode === 'write') triggerDisappear();
-            });
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden && hasCanvasContent() && currentMode === 'write') triggerDisappear();
-            });
-
-            // 摇一摇重置
-            let lastShakeTime = 0;
-            window.addEventListener('devicemotion', (e) => {
-                const acc = e.accelerationIncludingGravity;
-                if (!acc) return;
-                const magnitude = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
-                if (magnitude > 25 && Date.now() - lastShakeTime > 2000) {
-                    lastShakeTime = Date.now();
-                    clearAll();
-                    addResponse("……你抖掉了所有字迹。", true);
-                }
-            }, { passive: true });
-
+            // ========== 模式切换 ==========
             function switchToWriteMode() {
                 currentMode = 'write';
-                textInputArea.classList.remove('active');
-                btnWrite.classList.add('active-mode');
-                btnType.classList.remove('active-mode');
+                textInputOverlay.classList.remove('active');
+                writingCanvas.style.display = 'block';
                 resizeCanvases();
+                menuToggleMode.textContent = '⌨️ 切换打字模式';
             }
+
             function switchToTypeMode() {
                 currentMode = 'type';
-                textInputArea.classList.add('active');
-                btnType.classList.add('active-mode');
-                btnWrite.classList.remove('active-mode');
+                textInputOverlay.classList.add('active');
+                writingCanvas.style.display = 'none';
+                clearTimeout(inactivityTimer);
                 textInput.focus();
+                menuToggleMode.textContent = '🖊️ 切换手写模式';
             }
+
+            function toggleMode() {
+                if (currentMode === 'write') {
+                    switchToTypeMode();
+                } else {
+                    switchToWriteMode();
+                }
+            }
+
+            // ========== 清除与重置 ==========
             function clearAll() {
                 clearCanvas();
                 pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
                 particles = []; animationId = null;
                 clearTimeout(inactivityTimer);
+                hideReply();
             }
+
             function resetDiary() {
                 clearAll();
                 interactionCount = 0;
-                conversationHistory = [];
-                localStorage.removeItem('diaryConversation');
-                localStorage.removeItem('diaryInteractionCount');
-                renderHistory();
-                addResponse("你好……我是汤姆·里德尔。");
+                if (currentMode === 'type') switchToWriteMode();
+                setTimeout(() => {
+                    showReply("你好……我是汤姆·里德尔。在这页纸上写下你的想法吧。");
+                }, 500);
             }
 
-            function bindEvents() {
-                writingCanvas.addEventListener('mousedown', startDrawing);
-                writingCanvas.addEventListener('mousemove', draw);
-                writingCanvas.addEventListener('mouseup', stopDrawing);
-                writingCanvas.addEventListener('mouseleave', stopDrawing);
-                writingCanvas.addEventListener('touchstart', startDrawing, { passive: false });
-                writingCanvas.addEventListener('touchmove', draw, { passive: false });
-                writingCanvas.addEventListener('touchend', stopDrawing);
-                textInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitTextInput(); } });
-                submitBtn.addEventListener('click', submitTextInput);
-                btnWrite.addEventListener('click', switchToWriteMode);
-                btnType.addEventListener('click', switchToTypeMode);
-                btnClear.addEventListener('click', clearAll);
-                btnReset.addEventListener('click', resetDiary);
-                window.addEventListener('resize', resizeCanvases);
-            }
+            // ========== 隐藏菜单 ==========
+            menuTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                hiddenMenu.classList.toggle('show');
+            });
+            document.addEventListener('click', () => {
+                hiddenMenu.classList.remove('show');
+            });
 
+            menuClear.addEventListener('click', () => { clearAll(); hiddenMenu.classList.remove('show'); });
+            menuReset.addEventListener('click', () => { resetDiary(); hiddenMenu.classList.remove('show'); });
+            menuToggleMode.addEventListener('click', () => { toggleMode(); hiddenMenu.classList.remove('show'); });
+
+            // 双击页面空白处也可切换模式
+            writingSurface.addEventListener('dblclick', (e) => {
+                if (e.target === writingCanvas || e.target === writingSurface) {
+                    toggleMode();
+                }
+            });
+
+            // ========== 打字提交 ==========
+            submitBtn.addEventListener('click', () => {
+                if (currentMode === 'type' && textInput.value.trim()) {
+                    triggerDisappear();
+                    textInputOverlay.classList.remove('active');
+                    switchToWriteMode(); // 提交后切回手写模式
+                }
+            });
+
+            textInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    submitBtn.click();
+                }
+            });
+
+            // ========== 事件绑定 ==========
+            writingCanvas.addEventListener('mousedown', startDrawing);
+            writingCanvas.addEventListener('mousemove', draw);
+            writingCanvas.addEventListener('mouseup', stopDrawing);
+            writingCanvas.addEventListener('mouseleave', stopDrawing);
+            writingCanvas.addEventListener('touchstart', startDrawing, { passive: false });
+            writingCanvas.addEventListener('touchmove', draw, { passive: false });
+            writingCanvas.addEventListener('touchend', stopDrawing);
+            writingCanvas.addEventListener('touchcancel', stopDrawing);
+
+            window.addEventListener('resize', resizeCanvases);
+
+            // ========== 背景粒子 ==========
             function createBgParticles() {
                 const colors = ['rgba(46,180,100,0.5)', 'rgba(30,150,80,0.4)', 'rgba(180,140,80,0.45)'];
+                const container = document.getElementById('bgParticles');
                 for (let i = 0; i < 35; i++) {
                     const p = document.createElement('div');
                     p.className = 'bg-particle';
@@ -824,21 +709,26 @@
                     p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                     p.style.animationDuration = (8 + Math.random() * 22) + 's';
                     p.style.animationDelay = Math.random() * 18 + 's';
-                    document.getElementById('bgParticles').appendChild(p);
+                    container.appendChild(p);
                 }
             }
 
+            // ========== 初始化 ==========
             function init() {
                 resizeCanvases();
                 createBgParticles();
-                bindEvents();
                 switchToWriteMode();
-                if (conversationHistory.length === 0) {
-                    addResponse("你好……我是汤姆·里德尔。");
-                }
+                // 初始欢迎
+                setTimeout(() => {
+                    showReply("你好……我是汤姆·里德尔。在这页纸上写下你的想法吧。");
+                }, 800);
             }
 
-            document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
         })();
     </script>
 </body>
