@@ -8,6 +8,10 @@
     <meta property="og:title" content="汤姆·里德尔的日记">
     <meta property="og:description" content="写下你的秘密，日记会回应你……">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>">
+
+    <!-- 引入 Tesseract.js OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
@@ -37,7 +41,6 @@
             touch-action: manipulation;
         }
 
-        /* 背景魔法粒子 */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -62,7 +65,6 @@
             100% { transform: translateY(-120vh) scale(0.2); opacity: 0; }
         }
 
-        /* 日记页面 - 单张牛皮纸 */
         .diary-page {
             position: relative;
             width: 90vw;
@@ -77,16 +79,13 @@
                 radial-gradient(circle at 15% 85%, rgba(120,70,30,0.25) 0%, transparent 30%),
                 radial-gradient(circle at 85% 10%, rgba(100,60,20,0.2) 0%, transparent 40%);
             border-radius: 4px;
-            box-shadow:
-                0 20px 50px rgba(0,0,0,0.6),
-                inset 0 0 30px rgba(139,90,40,0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 30px rgba(139,90,40,0.3);
             z-index: 2;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* 纸纹理 */
         .diary-page::before {
             content: '';
             position: absolute;
@@ -102,7 +101,6 @@
             border-radius: inherit;
         }
 
-        /* 书写区与回复区共用的容器 */
         .writing-surface {
             position: relative;
             flex: 1;
@@ -132,7 +130,6 @@
             z-index: 8;
         }
 
-        /* 回复文字层 */
         .response-overlay {
             position: absolute;
             top: 50%;
@@ -159,56 +156,54 @@
         }
 
         @keyframes glowPulse {
-            0%, 100% { text-shadow: 0 0 15px var(--green-glow), 0 0 30px var(--green), 0 0 50px #1a7a3a; }
+            0%,100% { text-shadow: 0 0 15px var(--green-glow), 0 0 30px var(--green), 0 0 50px #1a7a3a; }
             50% { text-shadow: 0 0 25px var(--green-glow), 0 0 45px #7fffbb, 0 0 70px var(--green), 0 0 90px #1a7a3a; }
         }
 
-        /* 打字输入层（默认隐藏） */
-        .text-input-overlay {
+        .word-popup {
             position: absolute;
-            top: 20px;
-            left: 10%;
-            right: 10%;
-            bottom: 20px;
-            z-index: 9;
+            z-index: 12;
+            background: rgba(240, 221, 184, 0.92);
+            border: 2px solid #8b5a30;
+            border-radius: 8px;
+            padding: 12px;
             display: none;
             flex-direction: column;
-            background: rgba(240, 221, 184, 0.85);
-            border: 2px dashed rgba(139,100,60,0.5);
-            border-radius: 8px;
-            padding: 20px;
-            backdrop-filter: blur(4px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            min-width: 200px;
+            pointer-events: auto;
         }
-        .text-input-overlay.active { display: flex; }
 
-        .text-input-overlay textarea {
-            flex: 1;
+        .word-popup.show {
+            display: flex;
+        }
+
+        .word-popup input {
             background: transparent;
             border: none;
+            border-bottom: 1px dashed #8b5a30;
             font-family: inherit;
             font-size: 18px;
             color: var(--ink);
-            resize: none;
+            padding: 5px;
             outline: none;
+            text-align: center;
             letter-spacing: 1px;
-            line-height: 1.8;
         }
 
-        .text-input-overlay .submit-btn {
-            align-self: center;
-            margin-top: 10px;
-            padding: 8px 25px;
+        .word-popup .popup-btn {
+            margin-top: 8px;
+            padding: 6px 0;
             background: var(--ink);
             color: #d4c0a0;
             border: none;
             border-radius: 20px;
             cursor: pointer;
             font-family: inherit;
-            letter-spacing: 2px;
             font-size: 14px;
+            letter-spacing: 2px;
         }
 
-        /* 隐藏的工具栏触发点 */
         .secret-menu-trigger {
             position: absolute;
             top: 10px;
@@ -247,11 +242,9 @@
             letter-spacing: 1px;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
         }
-        .hidden-menu button:hover { background: rgba(201,160,80,0.2); color: #e0c070; }
+        .hidden-menu button:hover { background: rgba(201,160,80,0.2); }
 
-        /* 页面标题 */
         .page-title {
             text-align: center;
             font-size: 16px;
@@ -265,15 +258,37 @@
             position: relative;
         }
 
+        .hint-tap {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 13px;
+            color: #b8a080;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 5;
+            letter-spacing: 1px;
+        }
+
+        .ocr-status {
+            position: absolute;
+            top: 8px;
+            left: 15px;
+            z-index: 10;
+            font-size: 12px;
+            color: #6b5040;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
         @media (max-width: 600px) {
             .diary-page {
                 width: 95vw;
                 height: 90vh;
                 max-height: none;
             }
-            .response-overlay {
-                font-size: 18px;
-            }
+            .response-overlay { font-size: 18px; }
         }
     </style>
 </head>
@@ -288,61 +303,74 @@
             <canvas id="particleCanvas"></canvas>
             <div class="response-overlay" id="responseOverlay"></div>
 
-            <!-- 打字模式覆盖层 -->
-            <div class="text-input-overlay" id="textInputOverlay">
-                <textarea id="textInput" placeholder="用文字与日记对话..."></textarea>
-                <button class="submit-btn" id="submitBtn">✦ 交给日记 ✦</button>
+            <div class="word-popup" id="wordPopup">
+                <input type="text" id="popupInput" placeholder="输入关键词...">
+                <button class="popup-btn" id="popupSubmit">✦ 提交 ✦</button>
             </div>
+
+            <div class="hint-tap">书写后自动识别，或点按输入关键词</div>
         </div>
 
-        <!-- 隐藏菜单 -->
+        <div class="ocr-status" id="ocrStatus">OCR 引擎加载中...</div>
+
         <div class="secret-menu-trigger" id="menuTrigger">🐍</div>
         <div class="hidden-menu" id="hiddenMenu">
             <button id="menuClear">🧹 清除字迹</button>
             <button id="menuReset">🔄 重置日记</button>
-            <button id="menuToggleMode">⌨️ 切换打字模式</button>
         </div>
     </div>
 
     <script>
         (() => {
-            // DOM元素
+            // DOM 元素
             const writingSurface = document.getElementById('writingSurface');
             const writingCanvas = document.getElementById('writingCanvas');
             const particleCanvas = document.getElementById('particleCanvas');
             const responseOverlay = document.getElementById('responseOverlay');
-            const textInputOverlay = document.getElementById('textInputOverlay');
-            const textInput = document.getElementById('textInput');
-            const submitBtn = document.getElementById('submitBtn');
+            const wordPopup = document.getElementById('wordPopup');
+            const popupInput = document.getElementById('popupInput');
+            const popupSubmit = document.getElementById('popupSubmit');
             const menuTrigger = document.getElementById('menuTrigger');
             const hiddenMenu = document.getElementById('hiddenMenu');
             const menuClear = document.getElementById('menuClear');
             const menuReset = document.getElementById('menuReset');
-            const menuToggleMode = document.getElementById('menuToggleMode');
+            const ocrStatus = document.getElementById('ocrStatus');
 
             const ctx = writingCanvas.getContext('2d');
             const pctx = particleCanvas.getContext('2d');
 
-            let currentMode = 'write'; // 'write' | 'type'
+            // 状态变量
             let isDrawing = false;
             let lastX = 0, lastY = 0, lastTime = 0;
             let inactivityTimer = null;
-            const INACTIVITY_DELAY = 3500; // 停止书写3.5秒
-            const RESPONSE_DELAY = 1500; // 字消失后1.5秒显示回复
-            const REPLY_DURATION = 6000; // 回复显示6秒后自动淡出
+            const INACTIVITY_DELAY = 3500;
+            const RESPONSE_DELAY = 1500;
+            const REPLY_DURATION = 6000;
             let interactionCount = 0;
             let particles = [];
             let animationId = null;
             let replyTimer = null;
 
-            // ========== Canvas尺寸管理 ==========
+            // Tesseract 工作线程
+            let tesseractWorker = null;
+            (async () => {
+                try {
+                    tesseractWorker = await Tesseract.createWorker('chi_sim+eng');
+                    ocrStatus.textContent = 'OCR 已就绪 ✨';
+                    setTimeout(() => { ocrStatus.style.opacity = '0'; }, 2000);
+                } catch (e) {
+                    ocrStatus.textContent = 'OCR 不可用（仍可手写）';
+                    console.warn('OCR 加载失败', e);
+                }
+            })();
+
+            // Canvas 尺寸管理
             function resizeCanvases() {
                 const rect = writingSurface.getBoundingClientRect();
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const width = rect.width, height = rect.height;
 
                 if (writingCanvas.width !== width * dpr || writingCanvas.height !== height * dpr) {
-                    // 保存当前笔迹
                     const tempCanvas = document.createElement('canvas');
                     tempCanvas.width = writingCanvas.width;
                     tempCanvas.height = writingCanvas.height;
@@ -365,7 +393,7 @@
                 }
             }
 
-            // ========== 坐标获取 ==========
+            // 坐标获取
             function getCanvasPos(e) {
                 const rect = writingCanvas.getBoundingClientRect();
                 return { x: e.clientX - rect.left, y: e.clientY - rect.top };
@@ -376,10 +404,9 @@
                 return { x: t.clientX - rect.left, y: t.clientY - rect.top };
             }
 
-            // ========== 书写逻辑 ==========
+            // 手写事件
             function startDrawing(e) {
-                if (currentMode !== 'write') return;
-                if (e.type === 'touchstart' && e.touches.length !== 1) return; // 单指防误触
+                if (e.type === 'touchstart' && e.touches.length !== 1) return;
                 e.preventDefault();
                 const pos = e.type === 'touchstart' ? getTouchPos(e) : getCanvasPos(e);
                 isDrawing = true;
@@ -388,12 +415,11 @@
                 ctx.beginPath(); ctx.arc(pos.x, pos.y, 1.3, 0, 2 * Math.PI); ctx.fill();
                 ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
                 clearTimeout(inactivityTimer);
-                hideReply(); // 开始书写时隐藏回复
-                responseOverlay.classList.remove('visible');
+                hideReply();
             }
 
             function draw(e) {
-                if (!isDrawing || currentMode !== 'write') return;
+                if (!isDrawing) return;
                 if (e.type === 'touchmove' && e.touches.length !== 1) return;
                 e.preventDefault();
                 const pos = e.type === 'touchmove' ? getTouchPos(e) : getCanvasPos(e);
@@ -414,48 +440,53 @@
                 if (!isDrawing) return;
                 isDrawing = false;
                 lastTime = 0;
-                if (hasCanvasContent()) {
-                    startInactivityTimer();
-                }
+                if (hasCanvasContent()) startInactivityTimer();
             }
 
             function hasCanvasContent() {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const imageData = ctx.getImageData(0, 0, writingCanvas.width, writingCanvas.height);
-                for (let i = 3; i < imageData.data.length; i += 4) {
-                    if (imageData.data[i] > 10) return true;
-                }
+                for (let i = 3; i < imageData.data.length; i += 4) if (imageData.data[i] > 10) return true;
                 return false;
             }
 
             function startInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 inactivityTimer = setTimeout(() => {
-                    if (!isDrawing && hasCanvasContent()) {
-                        triggerDisappear();
-                    }
+                    if (!isDrawing && hasCanvasContent()) triggerDisappear();
                 }, INACTIVITY_DELAY);
             }
 
-            function triggerDisappear() {
-                if (!hasCanvasContent() && currentMode === 'write') return;
+            // === 核心：异步消失 + OCR 识别 ===
+            async function triggerDisappear() {
                 clearTimeout(inactivityTimer);
+                if (!hasCanvasContent()) return;
 
-                if (currentMode === 'write') {
-                    const imageData = ctx.getImageData(0, 0, writingCanvas.width, writingCanvas.height);
-                    spawnInkParticles(imageData);
-                    animateCanvasFadeOut(() => {
-                        clearCanvas();
-                        interactionCount++;
-                        scheduleReply();
-                    });
-                } else if (currentMode === 'type' && textInput.value.trim()) {
-                    const userText = textInput.value.trim();
-                    textInput.value = '';
-                    spawnTextParticles();
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const imageData = ctx.getImageData(0, 0, writingCanvas.width, writingCanvas.height);
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = writingCanvas.width;
+                tempCanvas.height = writingCanvas.height;
+                tempCanvas.getContext('2d').putImageData(imageData, 0, 0);
+
+                spawnInkParticles(imageData);
+                animateCanvasFadeOut(async () => {
+                    clearCanvas();
                     interactionCount++;
-                    setTimeout(() => scheduleReply(userText), 800);
-                }
+
+                    let userText = '';
+                    if (tesseractWorker) {
+                        try {
+                            const { data: { text } } = await tesseractWorker.recognize(tempCanvas);
+                            userText = text.replace(/\s+/g, '').trim();
+                            console.log('OCR 识别结果:', userText);
+                        } catch (e) {
+                            console.warn('识别失败，回退到随机回复');
+                        }
+                    }
+
+                    scheduleReply(userText);
+                });
             }
 
             function animateCanvasFadeOut(callback) {
@@ -483,7 +514,7 @@
                 ctx.clearRect(0, 0, writingCanvas.width / dpr, writingCanvas.height / dpr);
             }
 
-            // ========== 粒子效果 ==========
+            // 粒子效果（与之前相同）
             function spawnInkParticles(imageData) {
                 const dpr = Math.min(window.devicePixelRatio || 1, 2);
                 const w = writingCanvas.width / dpr, h = writingCanvas.height / dpr;
@@ -519,7 +550,7 @@
                         vy: -Math.sin(a) * (1 + Math.random() * 2),
                         life: 1, decay: 0.02,
                         size: 2 + Math.random() * 4,
-                        color: 'rgba(20,10,5,0.7)'
+                        color: 'rgba(46,180,120,0.7)'
                     });
                 }
                 if (!animationId) animateParticles();
@@ -539,7 +570,7 @@
                 animationId = requestAnimationFrame(animateParticles);
             }
 
-            // ========== 回复系统 ==========
+            // 对话回复系统
             const keywordReplies = {
                 '谁': ["我是汤姆·里德尔……至少曾经是。", "一个老朋友，可以信赖的朋友。"],
                 '魔法': ["魔法……是通往力量的道路。", "你想学更强大的魔法吗？"],
@@ -572,9 +603,7 @@
                 const t = text ? text.toLowerCase().trim() : '';
                 for (const [keys, replies] of Object.entries(keywordReplies)) {
                     for (const key of keys.split('|')) {
-                        if (t.includes(key)) {
-                            return replies[Math.floor(Math.random() * replies.length)];
-                        }
+                        if (t.includes(key)) return replies[Math.floor(Math.random() * replies.length)];
                     }
                 }
                 return normalReplies[Math.floor(Math.random() * normalReplies.length)];
@@ -591,7 +620,6 @@
             function showReply(text) {
                 responseOverlay.textContent = text;
                 responseOverlay.classList.add('visible');
-                // 自动淡出
                 clearTimeout(replyTimer);
                 replyTimer = setTimeout(() => {
                     hideReply();
@@ -603,87 +631,82 @@
                 clearTimeout(replyTimer);
             }
 
-            // ========== 模式切换 ==========
-            function switchToWriteMode() {
-                currentMode = 'write';
-                textInputOverlay.classList.remove('active');
-                writingCanvas.style.display = 'block';
-                resizeCanvases();
-                menuToggleMode.textContent = '⌨️ 切换打字模式';
+            // 弹出式关键词输入
+            function showPopup(x, y) {
+                const rect = writingSurface.getBoundingClientRect();
+                const pw = 220, ph = 80;
+                let left = x - rect.left - pw/2;
+                let top = y - rect.top - ph/2;
+                left = Math.max(10, Math.min(left, rect.width - pw - 10));
+                top = Math.max(10, Math.min(top, rect.height - ph - 20));
+
+                wordPopup.style.left = left + 'px';
+                wordPopup.style.top = top + 'px';
+                wordPopup.classList.add('show');
+                popupInput.value = '';
+                popupInput.focus();
             }
 
-            function switchToTypeMode() {
-                currentMode = 'type';
-                textInputOverlay.classList.add('active');
-                writingCanvas.style.display = 'none';
-                clearTimeout(inactivityTimer);
-                textInput.focus();
-                menuToggleMode.textContent = '🖊️ 切换手写模式';
+            function hidePopup() {
+                wordPopup.classList.remove('show');
             }
 
-            function toggleMode() {
-                if (currentMode === 'write') {
-                    switchToTypeMode();
-                } else {
-                    switchToWriteMode();
+            popupSubmit.addEventListener('click', () => {
+                const text = popupInput.value.trim();
+                if (text) {
+                    hidePopup();
+                    spawnTextParticles();
+                    interactionCount++;
+                    scheduleReply(text);
                 }
-            }
+            });
 
-            // ========== 清除与重置 ==========
-            function clearAll() {
+            popupInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') popupSubmit.click();
+            });
+
+            // 点击纸张空白处弹出输入框（当没有手写字迹时）
+            writingSurface.addEventListener('click', (e) => {
+                if (e.target === writingCanvas || e.target === writingSurface) {
+                    if (!isDrawing && !hasCanvasContent()) {
+                        showPopup(e.clientX, e.clientY);
+                    }
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wordPopup.contains(e.target) && e.target !== writingCanvas && e.target !== writingSurface) {
+                    hidePopup();
+                }
+            });
+
+            // 隐藏菜单
+            menuTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                hiddenMenu.classList.toggle('show');
+            });
+            document.addEventListener('click', () => hiddenMenu.classList.remove('show'));
+
+            menuClear.addEventListener('click', () => {
                 clearCanvas();
                 pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
                 particles = []; animationId = null;
                 clearTimeout(inactivityTimer);
                 hideReply();
-            }
-
-            function resetDiary() {
-                clearAll();
-                interactionCount = 0;
-                if (currentMode === 'type') switchToWriteMode();
-                setTimeout(() => {
-                    showReply("你好……我是汤姆·里德尔。在这页纸上写下你的想法吧。");
-                }, 500);
-            }
-
-            // ========== 隐藏菜单 ==========
-            menuTrigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                hiddenMenu.classList.toggle('show');
-            });
-            document.addEventListener('click', () => {
                 hiddenMenu.classList.remove('show');
             });
-
-            menuClear.addEventListener('click', () => { clearAll(); hiddenMenu.classList.remove('show'); });
-            menuReset.addEventListener('click', () => { resetDiary(); hiddenMenu.classList.remove('show'); });
-            menuToggleMode.addEventListener('click', () => { toggleMode(); hiddenMenu.classList.remove('show'); });
-
-            // 双击页面空白处也可切换模式
-            writingSurface.addEventListener('dblclick', (e) => {
-                if (e.target === writingCanvas || e.target === writingSurface) {
-                    toggleMode();
-                }
+            menuReset.addEventListener('click', () => {
+                clearCanvas();
+                pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+                particles = []; animationId = null;
+                clearTimeout(inactivityTimer);
+                hideReply();
+                interactionCount = 0;
+                hiddenMenu.classList.remove('show');
+                setTimeout(() => showReply("你好……我是汤姆·里德尔。"), 500);
             });
 
-            // ========== 打字提交 ==========
-            submitBtn.addEventListener('click', () => {
-                if (currentMode === 'type' && textInput.value.trim()) {
-                    triggerDisappear();
-                    textInputOverlay.classList.remove('active');
-                    switchToWriteMode(); // 提交后切回手写模式
-                }
-            });
-
-            textInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    submitBtn.click();
-                }
-            });
-
-            // ========== 事件绑定 ==========
+            // 事件绑定
             writingCanvas.addEventListener('mousedown', startDrawing);
             writingCanvas.addEventListener('mousemove', draw);
             writingCanvas.addEventListener('mouseup', stopDrawing);
@@ -692,10 +715,9 @@
             writingCanvas.addEventListener('touchmove', draw, { passive: false });
             writingCanvas.addEventListener('touchend', stopDrawing);
             writingCanvas.addEventListener('touchcancel', stopDrawing);
-
             window.addEventListener('resize', resizeCanvases);
 
-            // ========== 背景粒子 ==========
+            // 背景粒子
             function createBgParticles() {
                 const colors = ['rgba(46,180,100,0.5)', 'rgba(30,150,80,0.4)', 'rgba(180,140,80,0.45)'];
                 const container = document.getElementById('bgParticles');
@@ -713,22 +735,13 @@
                 }
             }
 
-            // ========== 初始化 ==========
             function init() {
                 resizeCanvases();
                 createBgParticles();
-                switchToWriteMode();
-                // 初始欢迎
-                setTimeout(() => {
-                    showReply("你好……我是汤姆·里德尔。在这页纸上写下你的想法吧。");
-                }, 800);
+                setTimeout(() => showReply("你好……我是汤姆·里德尔。书写后我会尝试识别文字。"), 800);
             }
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
+            document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
         })();
     </script>
 </body>
